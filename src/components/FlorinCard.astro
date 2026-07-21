@@ -1,0 +1,50 @@
+---
+// Shared realistic payment-card visual — chip, network mark, gradient, 1.586
+// ratio. The brand card re-skins with the theme; the virtual one is graphite.
+// Used on both /cards (interactive: JS swaps the feat-* nodes) and
+// /accounts (static), so the two never drift.
+interface Props {
+  name: string;
+  kind: string;
+  last: string;
+  exp?: string;
+  holder?: string;
+  brand?: boolean;
+  net?: string;
+  /** Emit the feat-* ids the cards-page wallet script updates. */
+  interactive?: boolean;
+  id?: string;
+  class?: string;
+}
+const {
+  name, kind, last, exp = '', holder = '', brand = true, net = 'VISA',
+  interactive = false, id, class: cls = '', ...rest
+} = Astro.props;
+const bg = brand
+  ? 'linear-gradient(135deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.72))'
+  : 'linear-gradient(135deg, hsl(222 14% 27%), hsl(222 16% 12%))';
+---
+
+<div
+  id={id}
+  class={`vt-relative vt-overflow-hidden vt-rounded-2xl vt-p-5 vt-text-generic-white vt-flex vt-flex-col vt-justify-between vt-w-full ${cls}`}
+  style={`aspect-ratio:1.586;background:${bg}`}
+  {...rest}
+>
+  <div class="vt-absolute" style="right:-48px;top:-48px;width:170px;height:170px;border-radius:9999px;background:rgba(255,255,255,0.08)"></div>
+  <div class="vt-relative vt-flex vt-items-start vt-justify-between">
+    <div>
+      <p class="vt-text-xs vt-opacity-80">Florin</p>
+      <p class="vt-text-sm vt-font-semibold"><span id={interactive ? 'feat-name' : undefined}>{name}</span> · <span id={interactive ? 'feat-kind' : undefined}>{kind}</span></p>
+    </div>
+    <span id={interactive ? 'feat-net' : undefined} class="vt-text-sm vt-font-bold vt-italic">{net}</span>
+  </div>
+  <div class="vt-relative" style="width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#f6d78a,#c9a24a)"></div>
+  <div class="vt-relative">
+    <p id={interactive ? 'feat-num' : undefined} class="vt-text-base vt-font-medium vt-tracking-wider">•••• •••• •••• {last}</p>
+    <div class="vt-flex vt-items-center vt-justify-between vt-mt-2">
+      <span id={interactive ? 'feat-holder' : undefined} class="vt-text-xs vt-opacity-90">{holder}</span>
+      <span id={interactive ? 'feat-exp' : undefined} class="vt-text-xs vt-opacity-90">{exp}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+---
+// Florin — Help center. Search, topics, popular articles, contact.
+import FlorinShell from '../components/FlorinShell.astro';
+import {
+  Search, BookOpen, Wallet, Send, Shield, CreditCard, FileText, MessageCircle,
+  Mail, ArrowRight, ChevronRight, ChevronDown,
+} from '@lucide/astro';
+
+const topics = [
+  { icon: BookOpen,   title: 'Getting started',      desc: 'Open an account, verify, invite your team.', count: '12 articles' },
+  { icon: Wallet,     title: 'Accounts & cards',     desc: 'Balances, statements, freezing and limits.', count: '18 articles' },
+  { icon: Send,       title: 'Payments & transfers', desc: 'Send money, schedule and recurring payments.', count: '15 articles' },
+  { icon: Shield,     title: 'Security',             desc: 'Two-factor, devices, and account recovery.', count: '9 articles' },
+  { icon: CreditCard, title: 'Billing & plans',      desc: 'Your plan, payment method, and invoices.', count: '7 articles' },
+  { icon: FileText,   title: 'Statements & tax',     desc: 'Export statements and tax documents.', count: '6 articles' },
+];
+
+const popular = [
+  'How do I open a new account?',
+  'When do transfers settle?',
+  'Set up two-factor authentication',
+  'Freeze or replace a card',
+  'Download statements for tax',
+];
+---
+
+<FlorinShell active="help" title="Florin — Help center" description="Florin help center — search, topics, and support. Built with Veritheme.">
+  <!-- Hero + search -->
+  <div class="vt-text-center vt-py-6">
+    <h1 class="vt-text-2xl vt-font-bold">How can we help?</h1>
+    <p class="vt-text-sm vt-text-mains-quaternary vt-mt-2">Search our guides or browse by topic.</p>
+    <div class="vt-relative vt-flex vt-items-center vt-max-w-xl vt-mx-auto vt-mt-5">
+      <Search class="vt-w-4 vt-h-4 vt-absolute vt-left-4 vt-text-mains-quaternary" />
+      <input class="vt-input vt-pl-10" type="search" placeholder="Search for help…" aria-label="Search help" />
+    </div>
+  </div>
+
+  <!-- Topics -->
+  <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-2 vt-lg:grid-cols-3 vt-gap-4">
+    {topics.map((t) => (
+      <a href="#" class="vt-card vt-p-6 vt-flex vt-flex-col vt-gap-4 vt-transition-colors vt-hover:border-accents-brand">
+        <div class="vt-icon-badge vt-text-accents-brand"><t.icon class="vt-w-5 vt-h-5" /></div>
+        <div>
+          <p class="vt-text-sm vt-font-semibold">{t.title}</p>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-1">{t.desc}</p>
+        </div>
+        <p class="vt-text-xs vt-text-mains-quaternary vt-mt-auto">{t.count}</p>
+      </a>
+    ))}
+  </div>
+
+  <!-- Popular + contact -->
+  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6 vt-items-start">
+    <div class="vt-lg:col-span-2 vt-card">
+      <div class="vt-card-header">
+        <h2 class="vt-text-sm vt-font-semibold">Popular articles</h2>
+      </div>
+      <div class="vt-divide-y vt-divide-border-default">
+        {popular.map((a) => (
+          <a href="#" class="vt-flex vt-items-center vt-justify-between vt-gap-3 vt-px-6 vt-py-4 vt-hover:bg-surfaces-subtle vt-transition-colors">
+            <span class="vt-text-sm vt-font-medium vt-truncate">{a}</span>
+            <ChevronRight class="vt-w-4 vt-h-4 vt-text-mains-quaternary vt-flex-shrink-0" />
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="vt-card vt-p-6">
+      <h2 class="vt-text-sm vt-font-semibold">Still stuck?</h2>
+      <p class="vt-text-xs vt-text-mains-quaternary vt-mt-1">Our team replies within a few hours.</p>
+      <div class="vt-space-y-2 vt-mt-5">
+        <button class="vt-btn vt-btn-primary vt-w-full" data-modal-open="contact-modal"><MessageCircle class="vt-w-4 vt-h-4" /> Start a chat</button>
+        <button class="vt-btn vt-btn-bordered vt-w-full" data-modal-open="contact-modal"><Mail class="vt-w-4 vt-h-4" /> Email support</button>
+      </div>
+      <a href="#" class="vt-flex vt-items-center vt-gap-1 vt-text-sm vt-link vt-mt-5">Read the docs <ArrowRight class="vt-w-4 vt-h-4" /></a>
+    </div>
+  </div>
+
+  <!-- Contact support -->
+  <div id="contact-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+    <div class="vt-dialog vt-overflow-visible">
+      <div class="vt-p-6">
+        <h3 id="contact-title" class="vt-text-lg vt-font-semibold">Contact support</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Tell us what's going on — we usually reply within a few hours.</p>
+        <div class="vt-space-y-4 vt-mt-5">
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block">Topic</label>
+            <div class="vt-select-wrapper vt-relative">
+              <div class="vt-select-trigger">
+                <span data-select-label>Payments &amp; transfers</span>
+                <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+              </div>
+              <div class="vt-select-dropdown">
+                <div class="vt-select-item" aria-selected="true">Payments &amp; transfers</div>
+                <div class="vt-select-item">Accounts &amp; cards</div>
+                <div class="vt-select-item">Security</div>
+                <div class="vt-select-item">Billing &amp; plans</div>
+                <div class="vt-select-item">Something else</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="contact-msg">Message</label>
+            <textarea id="contact-msg" class="vt-textarea" rows="4" placeholder="Describe your issue…"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-primary" data-modal-close><Send class="vt-w-4 vt-h-4" /> Send message</button>
+      </div>
+    </div>
+  </div>
+</FlorinShell>

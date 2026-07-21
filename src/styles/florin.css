@@ -1,0 +1,28 @@
+/* Florin app-shell CSS that can't be expressed with utilities:
+   smooth in-page scrolling for section-nav anchors, and the sidebar's
+   off-canvas drawer under lg (position/transform responsive variants aren't
+   generated as utilities). Imported by FlorinShell so it's bundled globally
+   rather than living in a component <style is:global> (which churns under HMR). */
+
+main {
+  scroll-behavior: smooth;
+}
+main :target {
+  scroll-margin-top: 1.5rem;
+}
+
+@media (max-width: 1023px) {
+  aside[data-sidebar] {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  aside[data-sidebar].is-open {
+    transform: translateX(0);
+    box-shadow: 0 25px 50px -12px hsl(var(--generic-1000) / 0.25);
+  }
+}

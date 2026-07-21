@@ -1,0 +1,170 @@
+---
+// Florin — Accounts & Cards. Account cards, detail, and card visuals.
+import FlorinShell from '../components/FlorinShell.astro';
+import FlorinModals from '../components/FlorinModals.astro';
+import FlorinCard from '../components/FlorinCard.astro';
+import {
+  Plus, Wallet, Landmark, PiggyBank, Copy, ArrowLeftRight, Send, Snowflake,
+  Settings, ArrowDownLeft, ArrowUpRight, ChevronDown,
+} from '@lucide/astro';
+
+// Three USD accounts that sum to the $128,540.00 total shown across the app.
+const accounts = [
+  { name: 'Main · USD',   balance: '$84,140.00', kind: 'Business checking', icon: Wallet,    brand: true },
+  { name: 'Savings',      balance: '$31,500.00', kind: '3.10% APY',          icon: PiggyBank, brand: false },
+  { name: 'Tax reserve',  balance: '$12,900.00', kind: 'Set aside monthly',  icon: Landmark,  brand: false },
+];
+
+const activity = [
+  { name: 'Stripe Payout',    date: 'Jul 21', amount: '+$12,480.00', pos: true },
+  { name: 'AWS',              date: 'Jul 20', amount: '−$2,314.90',  pos: false },
+  { name: 'Contractor · Lee', date: 'Jul 19', amount: '−$4,200.00',  pos: false },
+  { name: 'Client · Aster',   date: 'Jul 15', amount: '+$5,400.00',  pos: true },
+];
+---
+
+<FlorinShell active="accounts" title="Florin — Accounts" description="Florin accounts & cards — balances, IBANs, card controls. Built with Veritheme.">
+  <!-- Title + actions -->
+  <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+    <div>
+      <h1 class="vt-text-2xl vt-font-bold">Accounts</h1>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">3 accounts · $128,540.00 total balance</p>
+    </div>
+    <button class="vt-btn vt-btn-primary" data-modal-open="add-account-modal"><Plus class="vt-w-4 vt-h-4" /> Add account</button>
+  </div>
+
+  <!-- Account cards -->
+  <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-3 vt-gap-4">
+    {accounts.map((a) => (
+      <div
+        class={`vt-relative vt-overflow-hidden vt-rounded-2xl vt-p-5 ${a.brand ? 'vt-text-generic-white' : 'vt-card'}`}
+        style={a.brand ? 'background: linear-gradient(135deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.72))' : undefined}
+      >
+        {a.brand && <div class="vt-absolute" style="right:-40px;top:-40px;width:150px;height:150px;border-radius:9999px;background:rgba(255,255,255,0.08)"></div>}
+        <div class="vt-relative vt-flex vt-items-center vt-justify-between">
+          <span class={`vt-text-xs vt-font-medium ${a.brand ? 'vt-opacity-90' : 'vt-text-mains-quaternary'}`}>{a.kind}</span>
+          <a.icon class={`vt-w-5 vt-h-5 ${a.brand ? 'vt-opacity-90' : 'vt-text-mains-quaternary'}`} />
+        </div>
+        <p class={`vt-relative vt-text-xs vt-mt-6 ${a.brand ? 'vt-opacity-80' : 'vt-text-mains-quaternary'}`}>{a.name}</p>
+        <p class="vt-relative vt-text-2xl vt-font-bold vt-mt-0.5">{a.balance}</p>
+      </div>
+    ))}
+  </div>
+
+  <!-- Detail: card visual + IBAN/actions, and recent activity -->
+  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+    <!-- Physical/virtual card -->
+    <div class="vt-card vt-p-6">
+      <h2 class="vt-text-sm vt-font-semibold">Your card</h2>
+      <FlorinCard data-account-card class="vt-mt-4 vt-transition-opacity" brand name="Business" kind="Physical" last="4921" exp="08/28" holder="Sofia Marchetti" net="VISA" />
+      <div class="vt-grid vt-grid-cols-2 vt-gap-2 vt-mt-4">
+        <button class="vt-btn vt-btn-bordered vt-btn-sm" data-freeze-toggle><Snowflake class="vt-w-4 vt-h-4" /> Freeze</button>
+        <a href="/cards" class="vt-btn vt-btn-bordered vt-btn-sm"><Settings class="vt-w-4 vt-h-4" /> Manage</a>
+      </div>
+    </div>
+
+    <!-- Account detail + activity -->
+    <div class="vt-lg:col-span-2 vt-card">
+      <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
+        <div>
+          <h2 class="vt-text-sm vt-font-semibold">Main · USD</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Business checking · $84,140.00</p>
+        </div>
+        <div class="vt-flex vt-items-center vt-gap-2">
+          <button class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="send-modal"><Send class="vt-w-4 vt-h-4" /> Send</button>
+          <button class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="move-modal"><ArrowLeftRight class="vt-w-4 vt-h-4" /> Move</button>
+        </div>
+      </div>
+      <div class="vt-p-6 vt-space-y-4">
+        <!-- IBAN / routing -->
+        <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-2 vt-gap-4">
+          <div class="vt-rounded-xl vt-border vt-border-border-default vt-p-4">
+            <p class="vt-text-xs vt-text-mains-quaternary">Account number</p>
+            <div class="vt-flex vt-items-center vt-justify-between vt-gap-2 vt-mt-1">
+              <span class="vt-text-sm vt-font-medium">•••• 4921 0038</span>
+              <button class="vt-btn vt-btn-ghost vt-btn-sm" aria-label="Copy account number"><Copy class="vt-w-4 vt-h-4" /></button>
+            </div>
+          </div>
+          <div class="vt-rounded-xl vt-border vt-border-border-default vt-p-4">
+            <p class="vt-text-xs vt-text-mains-quaternary">Routing</p>
+            <div class="vt-flex vt-items-center vt-justify-between vt-gap-2 vt-mt-1">
+              <span class="vt-text-sm vt-font-medium">021 000 021</span>
+              <button class="vt-btn vt-btn-ghost vt-btn-sm" aria-label="Copy routing number"><Copy class="vt-w-4 vt-h-4" /></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent activity -->
+        <div>
+          <p class="vt-section-label vt-py-2">Recent activity</p>
+          <div class="vt-divide-y vt-divide-border-default">
+            {activity.map((t) => (
+              <div class="vt-flex vt-items-center vt-justify-between vt-gap-3 vt-py-3">
+                <div class="vt-flex vt-items-center vt-gap-3 vt-min-w-0">
+                  <div class={`vt-icon-badge vt-icon-badge-sm ${t.pos ? 'vt-text-success-primary' : 'vt-text-mains-secondary'}`}>
+                    {t.pos ? <ArrowDownLeft class="vt-w-4 vt-h-4" /> : <ArrowUpRight class="vt-w-4 vt-h-4" />}
+                  </div>
+                  <p class="vt-text-sm vt-font-medium vt-truncate">{t.name}</p>
+                </div>
+                <div class="vt-flex vt-items-center vt-gap-4 vt-flex-shrink-0">
+                  <span class="vt-text-xs vt-text-mains-quaternary">{t.date}</span>
+                  <span class={`vt-text-sm vt-font-medium vt-whitespace-nowrap ${t.pos ? 'vt-text-success-primary' : ''}`}>{t.amount}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add-account modal -->
+  <div id="add-account-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="add-account-title">
+    <div class="vt-dialog vt-overflow-visible">
+      <div class="vt-p-6">
+        <h3 id="add-account-title" class="vt-text-lg vt-font-semibold">Add an account</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Open a new account in seconds — no paperwork.</p>
+        <div class="vt-space-y-4 vt-mt-5">
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="acct-name">Account name</label>
+            <input id="acct-name" class="vt-input" type="text" placeholder="e.g. Payroll" />
+          </div>
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block">Currency</label>
+            <div class="vt-select-wrapper vt-relative">
+              <div class="vt-select-trigger">
+                <span data-select-label>USD — US Dollar</span>
+                <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+              </div>
+              <div class="vt-select-dropdown">
+                <div class="vt-select-item" aria-selected="true">USD — US Dollar</div>
+                <div class="vt-select-item">EUR — Euro</div>
+                <div class="vt-select-item">GBP — British Pound</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-primary" data-modal-close><Plus class="vt-w-4 vt-h-4" /> Create account</button>
+      </div>
+    </div>
+  </div>
+
+  <FlorinModals />
+
+  <script is:inline>
+    (function () {
+      var btn = document.querySelector('[data-freeze-toggle]');
+      var card = document.querySelector('[data-account-card]');
+      if (!btn) return;
+      var frozen = false;
+      btn.addEventListener('click', function () {
+        frozen = !frozen;
+        btn.lastChild.textContent = frozen ? ' Frozen' : ' Freeze';
+        if (card) card.classList.toggle('vt-opacity-50', frozen);
+      });
+    })();
+  </script>
+</FlorinShell>

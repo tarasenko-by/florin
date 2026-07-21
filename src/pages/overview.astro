@@ -1,0 +1,197 @@
+---
+// Florin — hero screen "Overview". Built from Veritheme components via the MCP.
+import FlorinShell from '../components/FlorinShell.astro';
+import FlorinModals from '../components/FlorinModals.astro';
+import {
+  Wallet, CreditCard, ArrowLeftRight, Receipt, Send, ArrowUpRight, ArrowDownLeft,
+  Plus, Building2, Landmark, ChartPie,
+} from '@lucide/astro';
+
+// `good` drives the trend colour by whether the change is FAVOURABLE, not by its
+// sign — a drop in spending is good, so it stays green even though it's −5.2%.
+const kpis = [
+  { label: 'Total balance', value: '$128,540.00', trend: '+3.4%',  good: true, sub: 'across 3 accounts' },
+  { label: 'Income · July',  value: '$52,300.00', trend: '+12.0%', good: true, sub: 'vs last month' },
+  { label: 'Spending · July', value: '$18,940.00', trend: '−5.2%', good: true, sub: 'vs last month' },
+  { label: 'Savings rate',   value: '42%',         trend: '+6 pts', good: true, sub: 'of net income' },
+];
+
+const cashflow = [
+  { m: 'Feb', inc: 'vt-h-16', exp: 'vt-h-10', incV: '$28,400', expV: '$17,200' },
+  { m: 'Mar', inc: 'vt-h-20', exp: 'vt-h-12', incV: '$34,900', expV: '$20,600' },
+  { m: 'Apr', inc: 'vt-h-14', exp: 'vt-h-16', incV: '$25,100', expV: '$28,300' },
+  { m: 'May', inc: 'vt-h-24', exp: 'vt-h-12', incV: '$41,800', expV: '$21,900' },
+  { m: 'Jun', inc: 'vt-h-28', exp: 'vt-h-16', incV: '$47,600', expV: '$27,400' },
+  { m: 'Jul', inc: 'vt-h-32', exp: 'vt-h-14', incV: '$52,300', expV: '$18,940' },
+];
+
+const categories = [
+  { icon: Building2, label: 'Payroll & contractors', amount: '$8,420', pct: 'vt-w-4/5' },
+  { icon: CreditCard, label: 'Software & SaaS',        amount: '$3,110', pct: 'vt-w-2/5' },
+  { icon: Landmark,   label: 'Office & rent',          amount: '$2,600', pct: 'vt-w-1/3' },
+  { icon: Receipt,    label: 'Travel & meals',         amount: '$1,540', pct: 'vt-w-1/4' },
+];
+
+const tx = [
+  { name: 'Stripe Payout',     cat: 'Income',   icon: ArrowDownLeft, date: 'Jul 21', acct: 'Main · USD', amount: '+$12,480.00', pos: true,  status: 'Settled', tone: 'vt-badge-success' },
+  { name: 'AWS',               cat: 'Software',  icon: ArrowUpRight,  date: 'Jul 20', acct: 'Main · USD', amount: '−$2,314.90',  pos: false, status: 'Cleared', tone: 'vt-badge-info' },
+  { name: 'Figma',             cat: 'Software',  icon: ArrowUpRight,  date: 'Jul 20', acct: 'Main · USD', amount: '−$144.00',    pos: false, status: 'Cleared', tone: 'vt-badge-info' },
+  { name: 'Contractor · Lee',  cat: 'Payroll',   icon: ArrowUpRight,  date: 'Jul 19', acct: 'Payroll',    amount: '−$4,200.00',  pos: false, status: 'Pending', tone: 'vt-badge-warning' },
+  { name: 'Wire · Nord GmbH',  cat: 'Income',    icon: ArrowDownLeft, date: 'Jul 18', acct: 'Main · EUR', amount: '+€6,900.00',  pos: true,  status: 'Settled', tone: 'vt-badge-success' },
+  { name: 'WeWork',            cat: 'Office',     icon: ArrowUpRight,  date: 'Jul 17', acct: 'Main · USD', amount: '−$2,600.00',  pos: false, status: 'Failed',  tone: 'vt-badge-danger' },
+];
+---
+
+<FlorinShell
+  active="overview"
+  title="Florin — Overview"
+  description="Florin — an open-source fintech dashboard built with Veritheme. Re-skins to any brand live. Pure CSS components, dark mode."
+>
+  <!-- Title + actions -->
+  <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+    <div>
+      <h1 class="vt-text-2xl vt-font-bold">Overview</h1>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">Good morning, Sofia — here's your money today.</p>
+    </div>
+    <div class="vt-flex vt-items-center vt-gap-2">
+      <button class="vt-btn vt-btn-bordered vt-hidden vt-sm:flex" data-modal-open="add-money-modal"><ArrowDownLeft class="vt-w-4 vt-h-4" /> Request</button>
+      <button class="vt-btn vt-btn-primary" data-modal-open="send-modal"><Send class="vt-w-4 vt-h-4" /> Send money</button>
+    </div>
+  </div>
+
+  <!-- KPI tiles -->
+  <div class="vt-grid vt-grid-cols-2 vt-lg:grid-cols-4 vt-gap-4">
+    {kpis.map((k) => (
+      <div class="vt-card vt-p-5">
+        <p class="vt-text-sm vt-text-mains-quaternary">{k.label}</p>
+        <p class="vt-text-2xl vt-font-bold vt-mt-1">{k.value}</p>
+        <div class="vt-flex vt-items-center vt-gap-1 vt-mt-2">
+          <span class={`vt-text-xs vt-font-medium ${k.good ? 'vt-text-success-primary' : 'vt-text-error-primary'}`}>{k.trend}</span>
+          <span class="vt-text-xs vt-text-mains-quaternary">{k.sub}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Cash flow + card visual -->
+  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+    <div class="vt-lg:col-span-2 vt-card vt-p-6">
+      <div class="vt-flex vt-items-start vt-justify-between vt-gap-4">
+        <div>
+          <h2 class="vt-text-sm vt-font-semibold">Cash flow</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Income vs spending · last 6 months</p>
+        </div>
+        <div class="vt-flex vt-items-center vt-gap-4">
+          <span class="vt-flex vt-items-center vt-gap-1.5 vt-text-xs vt-text-mains-secondary"><span class="vt-w-2 vt-h-2 vt-rounded-sm vt-bg-accents-brand"></span> Income</span>
+          <span class="vt-flex vt-items-center vt-gap-1.5 vt-text-xs vt-text-mains-secondary"><span class="vt-w-2 vt-h-2 vt-rounded-sm vt-bg-surfaces-contrast"></span> Spending</span>
+        </div>
+      </div>
+      <div class="vt-flex vt-items-end vt-justify-between vt-gap-4 vt-h-40 vt-mt-6">
+        {cashflow.map((c) => (
+          <div class="vt-flex-1 vt-flex vt-items-end vt-justify-center vt-gap-1.5">
+            <div class={`vt-w-3 vt-rounded-t vt-bg-accents-brand ${c.inc} vt-cursor-pointer`} data-tip={`${c.m} · Income ${c.incV}`}></div>
+            <div class={`vt-w-3 vt-rounded-t vt-bg-surfaces-contrast ${c.exp} vt-cursor-pointer`} data-tip={`${c.m} · Spending ${c.expV}`}></div>
+          </div>
+        ))}
+      </div>
+      <div class="vt-flex vt-gap-4 vt-mt-2">
+        {cashflow.map((c) => (
+          <span class="vt-flex-1 vt-text-center vt-text-xs vt-text-mains-quaternary">{c.m}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="vt-card vt-p-6 vt-flex vt-flex-col">
+      <div class="vt-relative vt-overflow-hidden vt-rounded-2xl vt-p-5 vt-text-generic-white" style="background: linear-gradient(135deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.72))">
+        <div class="vt-absolute" style="right:-48px;top:-48px;width:170px;height:170px;border-radius:9999px;background:rgba(255,255,255,0.08)"></div>
+        <div class="vt-relative vt-flex vt-items-center vt-justify-between">
+          <span class="vt-text-xs vt-font-semibold vt-opacity-90">Florin · Business</span>
+          <Wallet class="vt-w-5 vt-h-5 vt-opacity-90" />
+        </div>
+        <p class="vt-relative vt-text-xs vt-opacity-80 vt-mt-6">Main · USD balance</p>
+        <p class="vt-relative vt-text-2xl vt-font-bold vt-mt-0.5">$84,140.00</p>
+        <div class="vt-relative vt-flex vt-items-center vt-justify-between vt-mt-5">
+          <span class="vt-text-sm vt-tracking-wider vt-opacity-90">•••• 4921</span>
+          <span class="vt-text-xs vt-opacity-80">08/28</span>
+        </div>
+      </div>
+      <div class="vt-grid vt-grid-cols-2 vt-gap-2 vt-mt-4">
+        <button class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="add-money-modal"><Plus class="vt-w-4 vt-h-4" /> Add money</button>
+        <button class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="move-modal"><ArrowLeftRight class="vt-w-4 vt-h-4" /> Move</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent transactions + spending by category -->
+  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+    <div class="vt-lg:col-span-2 vt-card">
+      <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
+        <div>
+          <h2 class="vt-text-sm vt-font-semibold">Recent transactions</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Across all accounts</p>
+        </div>
+        <a href="/transactions" class="vt-link">View all</a>
+      </div>
+      <div class="vt-overflow-x-auto">
+        <table class="vt-w-full vt-border-collapse vt-text-sm">
+          <thead>
+            <tr class="vt-text-left vt-text-xs vt-text-mains-quaternary vt-bg-surfaces-subtle">
+              <th class="vt-font-medium vt-px-6 vt-py-3">Merchant</th>
+              <th class="vt-font-medium vt-px-6 vt-py-3 vt-hidden vt-md:table-cell">Account</th>
+              <th class="vt-font-medium vt-px-6 vt-py-3 vt-hidden vt-sm:table-cell">Date</th>
+              <th class="vt-font-medium vt-px-6 vt-py-3">Status</th>
+              <th class="vt-font-medium vt-px-6 vt-py-3 vt-text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tx.map((t) => (
+              <tr class="vt-border-t vt-border-border-default">
+                <td class="vt-px-6 vt-py-3">
+                  <div class="vt-flex vt-items-center vt-gap-3">
+                    <div class={`vt-icon-badge vt-icon-badge-sm ${t.pos ? 'vt-text-success-primary' : 'vt-text-mains-secondary'}`}><t.icon class="vt-w-4 vt-h-4" /></div>
+                    <div class="vt-min-w-0">
+                      <p class="vt-font-medium vt-truncate">{t.name}</p>
+                      <p class="vt-text-xs vt-text-mains-quaternary">{t.cat}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="vt-px-6 vt-py-3 vt-text-mains-secondary vt-hidden vt-md:table-cell">{t.acct}</td>
+                <td class="vt-px-6 vt-py-3 vt-text-mains-secondary vt-hidden vt-sm:table-cell">{t.date}</td>
+                <td class="vt-px-6 vt-py-3"><span class={`vt-badge vt-badge-soft ${t.tone}`}>{t.status}</span></td>
+                <td class={`vt-px-6 vt-py-3 vt-text-right vt-font-medium vt-whitespace-nowrap ${t.pos ? 'vt-text-success-primary' : ''}`}>{t.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="vt-card vt-p-6">
+      <div class="vt-flex vt-items-center vt-justify-between vt-gap-2">
+        <div>
+          <h2 class="vt-text-sm vt-font-semibold">Spending by category</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">July · $18,940 total</p>
+        </div>
+        <ChartPie class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+      </div>
+      <div class="vt-space-y-4 vt-mt-5">
+        {categories.map((c) => (
+          <div>
+            <div class="vt-flex vt-items-center vt-justify-between vt-gap-2">
+              <div class="vt-flex vt-items-center vt-gap-2 vt-min-w-0">
+                <div class="vt-icon-badge vt-icon-badge-sm"><c.icon class="vt-w-4 vt-h-4" /></div>
+                <p class="vt-text-sm vt-font-medium vt-truncate">{c.label}</p>
+              </div>
+              <span class="vt-text-sm vt-whitespace-nowrap">{c.amount}</span>
+            </div>
+            <div class="vt-progress vt-progress-sm vt-mt-2">
+              <div class={`vt-progress-bar ${c.pct}`}></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <FlorinModals />
+</FlorinShell>

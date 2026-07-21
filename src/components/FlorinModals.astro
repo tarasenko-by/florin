@@ -1,0 +1,114 @@
+---
+// Shared money modals (Send / Add money / Move). Include on any page whose
+// buttons use data-modal-open="send-modal" | "add-money-modal" | "move-modal".
+// Wiring (open/close, selects) lives in FlorinShell's script.
+import { ChevronDown, Send, Plus, ArrowLeftRight } from '@lucide/astro';
+
+const accounts = [
+  'Main · USD — $84,140.00',
+  'Savings — $31,500.00',
+  'Tax reserve — $12,900.00',
+];
+---
+
+<!-- Send money -->
+<div id="send-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="send-modal-title">
+  <div class="vt-dialog vt-overflow-visible">
+    <div class="vt-p-6">
+      <h3 id="send-modal-title" class="vt-text-lg vt-font-semibold">Send money</h3>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Pay someone or move funds out.</p>
+      <div class="vt-space-y-4 vt-mt-5">
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block">From</label>
+          <div class="vt-select-wrapper vt-relative">
+            <div class="vt-select-trigger"><span data-select-label>{accounts[0]}</span><ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" /></div>
+            <div class="vt-select-dropdown">{accounts.map((a, i) => (<div class="vt-select-item" aria-selected={i === 0 ? 'true' : undefined}>{a}</div>))}</div>
+          </div>
+        </div>
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block" for="send-to">Recipient</label>
+          <input id="send-to" class="vt-input" type="text" placeholder="Name, email, or account" />
+        </div>
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block" for="send-amount">Amount</label>
+          <input id="send-amount" class="vt-input" type="text" placeholder="$0.00" inputmode="decimal" />
+        </div>
+      </div>
+    </div>
+    <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+      <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+      <button class="vt-btn vt-btn-primary" data-modal-close><Send class="vt-w-4 vt-h-4" /> Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add money -->
+<div id="add-money-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="add-money-title">
+  <div class="vt-dialog vt-overflow-visible">
+    <div class="vt-p-6">
+      <h3 id="add-money-title" class="vt-text-lg vt-font-semibold">Add money</h3>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Top up from a linked card or bank.</p>
+      <div class="vt-space-y-4 vt-mt-5">
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block">To</label>
+          <div class="vt-select-wrapper vt-relative">
+            <div class="vt-select-trigger"><span data-select-label>{accounts[0]}</span><ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" /></div>
+            <div class="vt-select-dropdown">{accounts.map((a, i) => (<div class="vt-select-item" aria-selected={i === 0 ? 'true' : undefined}>{a}</div>))}</div>
+          </div>
+        </div>
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block">From</label>
+          <div class="vt-select-wrapper vt-relative">
+            <div class="vt-select-trigger"><span data-select-label>Visa •••• 4242</span><ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" /></div>
+            <div class="vt-select-dropdown">
+              <div class="vt-select-item" aria-selected="true">Visa •••• 4242</div>
+              <div class="vt-select-item">Bank transfer (ACH)</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block" for="add-amount">Amount</label>
+          <input id="add-amount" class="vt-input" type="text" placeholder="$0.00" inputmode="decimal" />
+        </div>
+      </div>
+    </div>
+    <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+      <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+      <button class="vt-btn vt-btn-primary" data-modal-close><Plus class="vt-w-4 vt-h-4" /> Add money</button>
+    </div>
+  </div>
+</div>
+
+<!-- Move between accounts -->
+<div id="move-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="move-modal-title">
+  <div class="vt-dialog vt-overflow-visible">
+    <div class="vt-p-6">
+      <h3 id="move-modal-title" class="vt-text-lg vt-font-semibold">Move money</h3>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Transfer instantly between your accounts.</p>
+      <div class="vt-space-y-4 vt-mt-5">
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block">From</label>
+          <div class="vt-select-wrapper vt-relative">
+            <div class="vt-select-trigger"><span data-select-label>{accounts[0]}</span><ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" /></div>
+            <div class="vt-select-dropdown">{accounts.map((a, i) => (<div class="vt-select-item" aria-selected={i === 0 ? 'true' : undefined}>{a}</div>))}</div>
+          </div>
+        </div>
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block">To</label>
+          <div class="vt-select-wrapper vt-relative">
+            <div class="vt-select-trigger"><span data-select-label>{accounts[1]}</span><ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" /></div>
+            <div class="vt-select-dropdown">{accounts.map((a, i) => (<div class="vt-select-item" aria-selected={i === 1 ? 'true' : undefined}>{a}</div>))}</div>
+          </div>
+        </div>
+        <div>
+          <label class="vt-label vt-mb-1.5 vt-block" for="move-amount">Amount</label>
+          <input id="move-amount" class="vt-input" type="text" placeholder="$0.00" inputmode="decimal" />
+        </div>
+      </div>
+    </div>
+    <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+      <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+      <button class="vt-btn vt-btn-primary" data-modal-close><ArrowLeftRight class="vt-w-4 vt-h-4" /> Move</button>
+    </div>
+  </div>
+</div>

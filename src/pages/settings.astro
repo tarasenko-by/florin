@@ -1,0 +1,191 @@
+---
+// Florin — Settings. Section nav, profile form, notification switches, danger zone.
+import FlorinShell from '../components/FlorinShell.astro';
+import { User, Bell, Shield, CreditCard, ChevronDown, Upload, Trash2, TriangleAlert } from '@lucide/astro';
+import { FACES } from '../data/images';
+
+const sections = [
+  { label: 'Profile',       icon: User,   href: '#profile',       active: true },
+  { label: 'Notifications', icon: Bell,   href: '#notifications', active: false },
+  { label: 'Security',      icon: Shield, href: '#security',      active: false },
+];
+
+const notifications = [
+  { title: 'Incoming payments',  desc: 'Get notified when money lands in any account.', on: true },
+  { title: 'Large transactions', desc: 'Alert on any transaction over $2,000.',          on: true },
+  { title: 'Weekly summary',     desc: 'A Monday digest of cash flow and balances.',      on: false },
+  { title: 'Product updates',    desc: 'New features and occasional tips.',               on: false },
+];
+---
+
+<FlorinShell active="settings" title="Florin — Settings" description="Florin settings — profile, notifications, security, danger zone. Built with Veritheme.">
+  <div>
+    <h1 class="vt-text-2xl vt-font-bold">Settings</h1>
+    <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">Manage your profile, alerts, and security.</p>
+  </div>
+
+  <div class="vt-flex vt-flex-col vt-md:flex-row vt-gap-8">
+    <!-- Section nav -->
+    <nav class="vt-md:w-56 vt-flex-shrink-0 vt-space-y-0.5">
+      {sections.map((s) => (
+        <a href={s.href} class={`vt-nav-item${s.active ? ' vt-active' : ''}`}>
+          <s.icon class="vt-w-4 vt-h-4" /> {s.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Content -->
+    <div class="vt-flex-1 vt-min-w-0 vt-space-y-6">
+      <!-- Profile (overflow-visible so the Business select dropdown isn't clipped
+           by the card — card header/footer have no background to clip) -->
+      <section id="profile" class="vt-card vt-overflow-visible" data-dirty-form>
+        <div class="vt-card-header">
+          <h2 class="vt-text-sm vt-font-semibold">Profile</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">How you appear across Florin.</p>
+        </div>
+        <div class="vt-p-6 vt-space-y-4">
+          <div class="vt-flex vt-items-center vt-gap-4">
+            <div class="vt-avatar vt-avatar-xl"><img src={FACES.SL} alt="Sofia Marchetti" /></div>
+            <div class="vt-flex vt-items-center vt-gap-2">
+              <button class="vt-btn vt-btn-bordered vt-btn-sm"><Upload class="vt-w-4 vt-h-4" /> Upload</button>
+              <button class="vt-btn vt-btn-ghost vt-btn-sm vt-text-error-primary">Remove</button>
+            </div>
+          </div>
+          <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-2 vt-gap-4">
+            <div>
+              <label class="vt-label vt-mb-1.5 vt-block" for="fn">Full name</label>
+              <input id="fn" class="vt-input" type="text" value="Sofia Marchetti" />
+            </div>
+            <div>
+              <label class="vt-label vt-mb-1.5 vt-block" for="em">Email</label>
+              <input id="em" class="vt-input" type="email" value="sofia@nordstudio.co" />
+            </div>
+          </div>
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block">Business</label>
+            <div class="vt-select-wrapper vt-relative">
+              <div class="vt-select-trigger">
+                <span data-select-label>Nord Studio LLC</span>
+                <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+              </div>
+              <div class="vt-select-dropdown">
+                <div class="vt-select-item" aria-selected="true">Nord Studio LLC</div>
+                <div class="vt-select-item">Nord Studio GmbH</div>
+                <div class="vt-select-item">Add a business…</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="vt-card-footer vt-flex vt-items-center vt-justify-end vt-gap-2">
+          <button class="vt-btn vt-btn-primary" data-dirty-save disabled>Save changes</button>
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section id="notifications" class="vt-card">
+        <div class="vt-card-header">
+          <h2 class="vt-text-sm vt-font-semibold">Notifications</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Choose what Florin pings you about.</p>
+        </div>
+        <div class="vt-p-6 vt-space-y-5">
+          {notifications.map((n) => (
+            <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+              <div class="vt-min-w-0">
+                <p class="vt-text-sm vt-font-medium">{n.title}</p>
+                <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">{n.desc}</p>
+              </div>
+              <button
+                role="switch"
+                aria-checked={n.on ? 'true' : 'false'}
+                class={`vt-switch vt-flex-shrink-0 ${n.on ? 'vt-active vt-bg-accents-brand' : 'vt-bg-surfaces-moderate'}`}
+              >
+                <span class="vt-switch-thumb"></span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Security -->
+      <section id="security" class="vt-card">
+        <div class="vt-card-header">
+          <h2 class="vt-text-sm vt-font-semibold">Security</h2>
+          <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Protect your account and sessions.</p>
+        </div>
+        <div class="vt-p-6 vt-space-y-5">
+          <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+            <div class="vt-min-w-0">
+              <p class="vt-text-sm vt-font-medium">Two-factor authentication</p>
+              <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Require a code at sign-in.</p>
+            </div>
+            <button role="switch" aria-checked="true" class="vt-switch vt-flex-shrink-0 vt-active vt-bg-accents-brand"><span class="vt-switch-thumb"></span></button>
+          </div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+            <div class="vt-min-w-0">
+              <p class="vt-text-sm vt-font-medium">Password</p>
+              <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Last changed 3 months ago.</p>
+            </div>
+            <button class="vt-btn vt-btn-bordered vt-btn-sm vt-flex-shrink-0" data-modal-open="change-password-modal">Change password</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Danger zone -->
+      <section class="vt-card vt-border-error-primary/30">
+        <div class="vt-card-header vt-border-error-primary/30">
+          <h2 class="vt-text-sm vt-font-semibold vt-text-error-primary">Danger zone</h2>
+        </div>
+        <div class="vt-flex vt-flex-col vt-sm:flex-row vt-sm:items-center vt-justify-between vt-gap-4 vt-p-6">
+          <div>
+            <p class="vt-text-sm vt-font-medium">Close this account</p>
+            <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Permanently close Florin and export your data.</p>
+          </div>
+          <button class="vt-btn vt-btn-danger vt-flex-shrink-0" data-modal-open="close-account-modal"><Trash2 class="vt-w-4 vt-h-4" /> Close account</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Change password -->
+  <div id="change-password-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="change-password-title">
+    <div class="vt-dialog">
+      <div class="vt-p-6">
+        <h3 id="change-password-title" class="vt-text-lg vt-font-semibold">Change password</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Use at least 12 characters.</p>
+        <div class="vt-space-y-4 vt-mt-5">
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="pw-current">Current password</label>
+            <input id="pw-current" class="vt-input" type="password" placeholder="••••••••" />
+          </div>
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="pw-new">New password</label>
+            <input id="pw-new" class="vt-input" type="password" placeholder="••••••••" />
+          </div>
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="pw-confirm">Confirm new password</label>
+            <input id="pw-confirm" class="vt-input" type="password" placeholder="••••••••" />
+          </div>
+        </div>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-primary" data-modal-close>Update password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Close-account confirmation -->
+  <div id="close-account-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="close-account-title">
+    <div class="vt-dialog">
+      <div class="vt-p-6">
+        <div class="vt-icon-badge vt-text-error-primary vt-mb-4"><TriangleAlert class="vt-w-5 vt-h-5" /></div>
+        <h3 id="close-account-title" class="vt-text-lg vt-font-semibold">Close this account?</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">This permanently closes Florin and exports your data. This can't be undone.</p>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-danger" data-modal-close><Trash2 class="vt-w-4 vt-h-4" /> Close account</button>
+      </div>
+    </div>
+  </div>
+</FlorinShell>

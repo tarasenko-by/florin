@@ -1,0 +1,68 @@
+---
+// Florin — Savings. Goals with progress and APY.
+import FlorinShell from '../components/FlorinShell.astro';
+import FlorinModals from '../components/FlorinModals.astro';
+import { Plus, Target, PiggyBank, TrendingUp, Building2 } from '@lucide/astro';
+
+const goals = [
+  { name: 'Emergency fund', icon: PiggyBank, saved: '$18,000', target: '$25,000', pct: '72%', w: 'vt-w-3/4' },
+  { name: 'New office',     icon: Building2,  saved: '$9,500',  target: '$40,000', pct: '24%', w: 'vt-w-1/4' },
+  { name: 'Tax reserve',    icon: Target,     saved: '$12,900', target: '$15,000', pct: '86%', w: 'vt-w-5/6' },
+];
+---
+
+<FlorinShell active="savings" title="Florin — Savings" description="Florin savings — goals, progress, and APY. Built with Veritheme.">
+  <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+    <div>
+      <h1 class="vt-text-2xl vt-font-bold">Savings</h1>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">Set money aside and let it earn 3.10% APY.</p>
+    </div>
+    <button class="vt-btn vt-btn-primary" data-modal-open="add-money-modal"><Plus class="vt-w-4 vt-h-4" /> New goal</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="vt-grid vt-grid-cols-2 vt-lg:grid-cols-3 vt-gap-4">
+    <div class="vt-card vt-p-5">
+      <p class="vt-text-sm vt-text-mains-quaternary">Total saved</p>
+      <p class="vt-text-2xl vt-font-bold vt-mt-1">$40,400.00</p>
+      <span class="vt-text-xs vt-font-medium vt-text-success-primary">+$3,000 this month</span>
+    </div>
+    <div class="vt-card vt-p-5">
+      <p class="vt-text-sm vt-text-mains-quaternary">Interest earned</p>
+      <p class="vt-text-2xl vt-font-bold vt-mt-1">$1,043.20</p>
+      <span class="vt-text-xs vt-font-medium vt-text-success-primary">3.10% APY</span>
+    </div>
+    <div class="vt-card vt-p-5 vt-hidden vt-lg:block">
+      <p class="vt-text-sm vt-text-mains-quaternary">Goals on track</p>
+      <p class="vt-text-2xl vt-font-bold vt-mt-1">2 / 3</p>
+      <span class="vt-text-xs vt-text-mains-quaternary">1 needs attention</span>
+    </div>
+  </div>
+
+  <!-- Goals -->
+  <div class="vt-card">
+    <div class="vt-card-header vt-flex vt-items-center vt-gap-2">
+      <TrendingUp class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+      <h2 class="vt-text-sm vt-font-semibold">Goals</h2>
+    </div>
+    <div class="vt-p-6 vt-space-y-6">
+      {goals.map((g) => (
+        <div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-gap-3">
+            <div class="vt-flex vt-items-center vt-gap-3 vt-min-w-0">
+              <div class="vt-icon-badge"><g.icon class="vt-w-5 vt-h-5" /></div>
+              <div class="vt-min-w-0">
+                <p class="vt-text-sm vt-font-medium vt-truncate">{g.name}</p>
+                <p class="vt-text-xs vt-text-mains-quaternary">{g.saved} of {g.target}</p>
+              </div>
+            </div>
+            <span class="vt-text-sm vt-font-semibold vt-flex-shrink-0">{g.pct}</span>
+          </div>
+          <div class="vt-progress vt-progress-sm vt-mt-3"><div class={`vt-progress-bar ${g.w}`}></div></div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <FlorinModals />
+</FlorinShell>

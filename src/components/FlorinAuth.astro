@@ -1,0 +1,65 @@
+---
+// Shared shell-less layout for Florin auth + error screens: form on the left,
+// a brand-coloured panel on the right that RE-SKINS with the active theme
+// (the campaign's whole hook). Pages supply their form via the default slot.
+import FlorinLayout from '../layouts/FlorinLayout.astro';
+import { Check } from '@lucide/astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+
+const perks = [
+  'Multi-currency accounts in minutes',
+  'Issue virtual cards instantly',
+  'Real-time spend analytics',
+];
+---
+
+<FlorinLayout title={title} description={description}>
+  <div class="vt-min-h-screen vt-flex">
+    <!-- Form side -->
+    <div class="vt-flex vt-flex-1 vt-items-center vt-justify-center vt-p-6 vt-sm:p-8">
+      <div class="vt-w-full vt-max-w-sm">
+        <a href="/overview" class="vt-flex vt-items-center vt-gap-2 vt-mb-8">
+          <div class="vt-icon-badge vt-icon-badge-sm vt-icon-badge-square vt-bg-accents-brand">
+            <span class="vt-text-xs vt-font-bold vt-text-generic-white">F</span>
+          </div>
+          <span class="vt-text-base vt-font-bold">Florin</span>
+        </a>
+        <slot />
+      </div>
+    </div>
+
+    <!-- Brand panel — re-themes with the theme -->
+    <div
+      class="vt-hidden vt-lg:flex vt-w-2/5 vt-flex-col vt-justify-between vt-p-12 vt-text-generic-white vt-relative vt-overflow-hidden"
+      style="background: linear-gradient(140deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.62))"
+    >
+      <div class="vt-absolute" style="right:-80px;top:-80px;width:280px;height:280px;border-radius:9999px;background:rgba(255,255,255,0.10)"></div>
+      <div class="vt-absolute" style="left:-70px;bottom:-70px;width:220px;height:220px;border-radius:9999px;background:rgba(255,255,255,0.07)"></div>
+
+      <div class="vt-relative vt-flex vt-items-center vt-gap-2">
+        <span class="vt-flex vt-items-center vt-justify-center vt-w-7 vt-h-7 vt-rounded-lg vt-text-xs vt-font-bold vt-flex-shrink-0" style="background:rgba(255,255,255,0.2)">F</span>
+        <span class="vt-text-base vt-font-bold">Florin</span>
+      </div>
+
+      <div class="vt-relative">
+        <p class="vt-text-2xl vt-font-bold vt-leading-snug vt-max-w-sm">Business banking that moves at your speed.</p>
+        <div class="vt-space-y-3 vt-mt-6">
+          {perks.map((p) => (
+            <div class="vt-flex vt-items-center vt-gap-3">
+              <span class="vt-flex vt-items-center vt-justify-center vt-w-6 vt-h-6 vt-rounded-full vt-flex-shrink-0" style="background:rgba(255,255,255,0.2)">
+                <Check class="vt-w-3 vt-h-3" stroke-width={3} />
+              </span>
+              <span class="vt-text-sm vt-opacity-90">{p}</span>
+            </div>
+          ))}
+        </div>
+        <p class="vt-text-xs vt-opacity-70 vt-mt-8">Trusted by 12,000+ businesses · Built with Veritheme</p>
+      </div>
+    </div>
+  </div>
+</FlorinLayout>

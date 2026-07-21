@@ -1,0 +1,175 @@
+---
+// Florin — Billing. Plan, payment method, and invoices.
+import FlorinShell from '../components/FlorinShell.astro';
+import { Download, CreditCard, CircleCheck, Zap, TriangleAlert } from '@lucide/astro';
+
+const plans = [
+  { name: 'Starter', price: '$0', desc: '1 account, basic analytics' },
+  { name: 'Business · Pro', price: '$49', desc: 'Unlimited accounts, priority support', current: true },
+  { name: 'Scale', price: '$149', desc: 'SSO, dedicated manager, SLA' },
+];
+
+const invoices = [
+  { id: 'INV-2048', date: 'Jul 1, 2026', amount: '$49.00', status: 'Paid', tone: 'vt-badge-success' },
+  { id: 'INV-2011', date: 'Jun 1, 2026', amount: '$49.00', status: 'Paid', tone: 'vt-badge-success' },
+  { id: 'INV-1975', date: 'May 1, 2026', amount: '$49.00', status: 'Paid', tone: 'vt-badge-success' },
+  { id: 'INV-1940', date: 'Apr 1, 2026', amount: '$49.00', status: 'Paid', tone: 'vt-badge-success' },
+];
+---
+
+<FlorinShell active="billing" title="Florin — Billing" description="Florin billing — plan, payment method, and invoices. Built with Veritheme.">
+  <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+    <div>
+      <h1 class="vt-text-2xl vt-font-bold">Billing</h1>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">Manage your plan, payment method, and invoices.</p>
+    </div>
+    <button class="vt-btn vt-btn-bordered"><Download class="vt-w-4 vt-h-4" /> Download all</button>
+  </div>
+
+  <!-- Plan + payment method -->
+  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+    <div class="vt-lg:col-span-2 vt-card vt-p-6">
+      <div class="vt-flex vt-items-start vt-justify-between vt-gap-4">
+        <div class="vt-flex vt-items-center vt-gap-3">
+          <div class="vt-icon-badge vt-text-accents-brand"><Zap class="vt-w-5 vt-h-5" /></div>
+          <div>
+            <h2 class="vt-text-sm vt-font-semibold">Business · Pro</h2>
+            <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Renews Aug 1, 2026</p>
+          </div>
+        </div>
+        <span class="vt-badge vt-badge-soft vt-badge-success">Active</span>
+      </div>
+      <div class="vt-flex vt-items-end vt-gap-1 vt-mt-5">
+        <span class="vt-text-3xl vt-font-bold">$49</span>
+        <span class="vt-text-sm vt-text-mains-quaternary vt-mb-1">/ month</span>
+      </div>
+      <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-3 vt-gap-3 vt-mt-5">
+        {['Unlimited accounts', 'Priority support', 'Advanced analytics'].map((f) => (
+          <div class="vt-flex vt-items-center vt-gap-2 vt-text-sm">
+            <CircleCheck class="vt-w-4 vt-h-4 vt-text-success-primary" /> {f}
+          </div>
+        ))}
+      </div>
+      <div class="vt-flex vt-items-center vt-gap-2 vt-mt-6">
+        <button class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="change-plan-modal">Change plan</button>
+        <button class="vt-btn vt-btn-ghost vt-btn-sm vt-text-error-primary" data-modal-open="cancel-sub-modal">Cancel subscription</button>
+      </div>
+    </div>
+
+    <div class="vt-card vt-p-6">
+      <h2 class="vt-text-sm vt-font-semibold">Payment method</h2>
+      <div class="vt-rounded-xl vt-border vt-border-border-default vt-p-4 vt-flex vt-items-center vt-gap-3 vt-mt-4">
+        <div class="vt-icon-badge vt-text-mains-secondary"><CreditCard class="vt-w-5 vt-h-5" /></div>
+        <div class="vt-min-w-0">
+          <p class="vt-text-sm vt-font-medium">Visa •••• 4242</p>
+          <p class="vt-text-xs vt-text-mains-quaternary">Expires 08/28</p>
+        </div>
+      </div>
+      <button class="vt-btn vt-btn-bordered vt-btn-sm vt-w-full vt-mt-4" data-modal-open="update-card-modal">Update card</button>
+    </div>
+  </div>
+
+  <!-- Invoices -->
+  <div class="vt-rounded-xl vt-border vt-border-border-default vt-bg-surfaces-surface vt-overflow-hidden">
+    <div class="vt-flex vt-items-center vt-justify-between vt-gap-4 vt-p-6 vt-border-b vt-border-border-default">
+      <h2 class="vt-text-sm vt-font-semibold">Invoices</h2>
+    </div>
+    <div class="vt-overflow-x-auto">
+      <table class="vt-w-full vt-border-collapse vt-text-sm">
+        <thead>
+          <tr class="vt-text-left vt-text-xs vt-text-mains-quaternary vt-bg-surfaces-subtle">
+            <th class="vt-font-medium vt-px-6 vt-py-3">Invoice</th>
+            <th class="vt-font-medium vt-px-6 vt-py-3 vt-hidden vt-sm:table-cell">Date</th>
+            <th class="vt-font-medium vt-px-6 vt-py-3">Status</th>
+            <th class="vt-font-medium vt-px-6 vt-py-3 vt-text-right">Amount</th>
+            <th class="vt-font-medium vt-px-6 vt-py-3 vt-text-right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {invoices.map((inv) => (
+            <tr class="vt-border-t vt-border-border-default">
+              <td class="vt-px-6 vt-py-3 vt-font-medium">{inv.id}</td>
+              <td class="vt-px-6 vt-py-3 vt-text-mains-secondary vt-hidden vt-sm:table-cell">{inv.date}</td>
+              <td class="vt-px-6 vt-py-3"><span class={`vt-badge vt-badge-soft ${inv.tone}`}>{inv.status}</span></td>
+              <td class="vt-px-6 vt-py-3 vt-text-right vt-font-medium">{inv.amount}</td>
+              <td class="vt-px-6 vt-py-3 vt-text-right">
+                <button class="vt-btn vt-btn-ghost vt-btn-sm" aria-label="Download invoice"><Download class="vt-w-4 vt-h-4" /></button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Change plan -->
+  <div id="change-plan-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="change-plan-title">
+    <div class="vt-dialog">
+      <div class="vt-p-6">
+        <h3 id="change-plan-title" class="vt-text-lg vt-font-semibold">Change plan</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Upgrade or downgrade anytime — prorated automatically.</p>
+        <div class="vt-space-y-2 vt-mt-5">
+          {plans.map((p) => (
+            <label class={`vt-flex vt-items-center vt-gap-3 vt-p-4 vt-rounded-xl vt-border vt-cursor-pointer vt-transition-colors ${p.current ? 'vt-border-accents-brand' : 'vt-border-border-default vt-hover:border-accents-brand'}`}>
+              <input type="radio" name="plan" class="vt-radio" checked={p.current} />
+              <div class="vt-min-w-0 vt-flex-1">
+                <p class="vt-text-sm vt-font-medium">{p.name}</p>
+                <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">{p.desc}</p>
+              </div>
+              <span class="vt-text-sm vt-font-semibold vt-whitespace-nowrap">{p.price}<span class="vt-text-xs vt-text-mains-quaternary vt-font-normal">/mo</span></span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-primary" data-modal-close>Confirm plan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update card -->
+  <div id="update-card-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="update-card-title">
+    <div class="vt-dialog">
+      <div class="vt-p-6">
+        <h3 id="update-card-title" class="vt-text-lg vt-font-semibold">Update payment method</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Your card is encrypted and never stored by us.</p>
+        <div class="vt-space-y-4 vt-mt-5">
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="card-num">Card number</label>
+            <input id="card-num" class="vt-input" type="text" inputmode="numeric" placeholder="1234 1234 1234 1234" />
+          </div>
+          <div class="vt-grid vt-grid-cols-2 vt-gap-4">
+            <div>
+              <label class="vt-label vt-mb-1.5 vt-block" for="card-exp">Expiry</label>
+              <input id="card-exp" class="vt-input" type="text" placeholder="MM / YY" />
+            </div>
+            <div>
+              <label class="vt-label vt-mb-1.5 vt-block" for="card-cvc">CVC</label>
+              <input id="card-cvc" class="vt-input" type="text" inputmode="numeric" placeholder="123" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-primary" data-modal-close>Save card</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel subscription -->
+  <div id="cancel-sub-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="cancel-sub-title">
+    <div class="vt-dialog">
+      <div class="vt-p-6">
+        <div class="vt-icon-badge vt-text-error-primary vt-mb-4"><TriangleAlert class="vt-w-5 vt-h-5" /></div>
+        <h3 id="cancel-sub-title" class="vt-text-lg vt-font-semibold">Cancel subscription?</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">You'll keep Pro features until Aug 1, 2026, then drop to the free Starter plan.</p>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Keep Pro</button>
+        <button class="vt-btn vt-btn-danger" data-modal-close>Cancel subscription</button>
+      </div>
+    </div>
+  </div>
+</FlorinShell>

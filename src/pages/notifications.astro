@@ -1,0 +1,82 @@
+---
+// Florin — Notifications. Full activity feed.
+import FlorinShell from '../components/FlorinShell.astro';
+import { ArrowDownLeft, TriangleAlert, CircleCheck, Bell, CreditCard, Check } from '@lucide/astro';
+
+const groups = [
+  {
+    label: 'Today',
+    items: [
+      { icon: ArrowDownLeft, tone: 'vt-text-success-primary', title: 'Payment received', desc: 'Stripe Payout · +$12,480.00', time: '2m ago', unread: true },
+      { icon: TriangleAlert,  tone: 'vt-text-error-primary',   title: 'Transfer failed',   desc: 'WeWork · $2,600.00 — insufficient funds', time: '1h ago', unread: true },
+      { icon: CircleCheck,    tone: 'vt-text-info-primary',    title: 'Invoice paid',      desc: 'Client · Aster · $5,400.00', time: '3h ago', unread: true },
+    ],
+  },
+  {
+    label: 'Earlier',
+    items: [
+      { icon: CreditCard, tone: 'vt-text-mains-secondary', title: 'Card charged', desc: 'AWS · $2,314.90', time: 'Yesterday', unread: false },
+      { icon: Bell,       tone: 'vt-text-mains-secondary', title: 'Weekly summary is ready', desc: 'Net +$8,120 across all accounts', time: 'Mon', unread: false },
+      { icon: CircleCheck, tone: 'vt-text-info-primary',   title: 'Payout scheduled', desc: 'Ramp Payroll · $8,420.00 on Jul 28', time: 'Sun', unread: false },
+    ],
+  },
+];
+---
+
+<FlorinShell active="notifications" title="Florin — Notifications" description="Florin notifications — full activity feed. Built with Veritheme.">
+  <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+    <div>
+      <h1 class="vt-text-2xl vt-font-bold">Notifications</h1>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1"><span data-notif-count>3</span> unread · everything happening in your account.</p>
+    </div>
+    <button class="vt-btn vt-btn-bordered" data-notif-markall><Check class="vt-w-4 vt-h-4" /> Mark all read</button>
+  </div>
+
+  <div class="vt-max-w-2xl vt-space-y-6">
+    {groups.map((g) => (
+      <div>
+        <p class="vt-section-label vt-mb-2">{g.label}</p>
+        <div class="vt-card">
+          <div class="vt-divide-y vt-divide-border-default">
+            {g.items.map((n) => (
+              <div data-notif class={`vt-flex vt-items-start vt-gap-3 vt-p-4 vt-cursor-pointer vt-hover:bg-surfaces-subtle vt-transition-colors ${n.unread ? 'vt-bg-brand-tint/40' : ''}`}>
+                <div class={`vt-icon-badge vt-icon-badge-sm ${n.tone}`}><n.icon class="vt-w-4 vt-h-4" /></div>
+                <div class="vt-min-w-0 vt-flex-1">
+                  <p class="vt-text-sm vt-font-medium">{n.title}</p>
+                  <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">{n.desc}</p>
+                </div>
+                <div class="vt-flex vt-items-center vt-gap-2 vt-flex-shrink-0">
+                  <span class="vt-text-xs vt-text-mains-quaternary vt-whitespace-nowrap">{n.time}</span>
+                  {n.unread && <span data-notif-dot class="vt-w-2 vt-h-2 vt-rounded-full vt-bg-accents-brand"></span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <script is:inline>
+    (function () {
+      var count = document.querySelector('[data-notif-count]');
+      function refresh() {
+        var n = document.querySelectorAll('[data-notif-dot]').length;
+        if (count) count.textContent = n;
+      }
+      function markRead(row) {
+        row.classList.remove('vt-bg-brand-tint/40');
+        var dot = row.querySelector('[data-notif-dot]');
+        if (dot) dot.remove();
+        refresh();
+      }
+      document.querySelectorAll('[data-notif]').forEach(function (row) {
+        row.addEventListener('click', function () { markRead(row); });
+      });
+      var all = document.querySelector('[data-notif-markall]');
+      if (all) all.addEventListener('click', function () {
+        document.querySelectorAll('[data-notif]').forEach(markRead);
+      });
+    })();
+  </script>
+</FlorinShell>

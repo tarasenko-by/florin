@@ -1,0 +1,213 @@
+---
+// Florin — Cards. Selectable card wallet: pick a card on the right, see it
+// large with its spend + controls on the left. Realistic card visuals that
+// re-skin with the theme.
+import FlorinShell from '../components/FlorinShell.astro';
+import FlorinModals from '../components/FlorinModals.astro';
+import FlorinCard from '../components/FlorinCard.astro';
+import { Plus, Snowflake, Globe, Landmark, ArrowUpRight, ChevronDown } from '@lucide/astro';
+
+const cards = [
+  { id: 'physical', name: 'Business', kind: 'Physical', last: '4921', exp: '08/28',
+    holder: 'Sofia Marchetti', brand: true,  net: 'VISA', spent: 8240, limit: 15000 },
+  { id: 'virtual',  name: 'Team',     kind: 'Virtual',  last: '7730', exp: '03/27',
+    holder: 'Sofia Marchetti', brand: false, net: 'MC',   spent: 3110, limit: 5000 },
+];
+
+const controls = [
+  { key: 'freeze', icon: Snowflake, title: 'Freeze card',    desc: 'Instantly block all transactions.', on: false },
+  { key: 'online', icon: Globe,     title: 'Online payments', desc: 'E-commerce and subscriptions.',     on: true },
+  { key: 'atm',    icon: Landmark,  title: 'ATM withdrawals', desc: 'Allow cash withdrawals.',           on: true },
+];
+
+const activity = [
+  { name: 'AWS',    cat: 'Cloud',    date: 'Jul 20', amount: '−$2,314.90' },
+  { name: 'Figma',  cat: 'Software', date: 'Jul 20', amount: '−$144.00' },
+  { name: 'WeWork', cat: 'Office',   date: 'Jul 17', amount: '−$2,600.00' },
+];
+
+const money = (n: number) => '$' + n.toLocaleString('en-US');
+const brandGrad = 'linear-gradient(135deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.72))';
+const graphite  = 'linear-gradient(135deg, hsl(222 14% 27%), hsl(222 16% 12%))';
+const swatch = (brand: boolean) => (brand ? brandGrad : graphite);
+
+const first = cards[0];
+const pct = (c: typeof cards[number]) => Math.round((c.spent / c.limit) * 100);
+---
+
+<FlorinShell active="cards" title="Florin — Cards" description="Florin cards — a selectable wallet with realistic cards, spend, and controls. Built with Veritheme.">
+  <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
+    <div>
+      <h1 class="vt-text-2xl vt-font-bold">Cards</h1>
+      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">{cards.length} active cards · issue virtual cards instantly.</p>
+    </div>
+    <button class="vt-btn vt-btn-primary" data-modal-open="new-card-modal"><Plus class="vt-w-4 vt-h-4" /> New card</button>
+  </div>
+
+  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6 vt-items-start">
+    <!-- Selected card: visual + spend + controls -->
+    <div class="vt-lg:col-span-2 vt-card vt-p-6 vt-space-y-6">
+      <div class="vt-flex vt-flex-col vt-sm:flex-row vt-gap-6">
+        <!-- Realistic card visual (re-skins with the theme) -->
+        <div class="vt-w-full vt-max-w-xs vt-flex-shrink-0">
+          <FlorinCard id="feat-card" interactive brand={first.brand} name={first.name} kind={first.kind} last={first.last} exp={first.exp} holder={first.holder} net={first.net} />
+        </div>
+
+        <!-- Spend against the card's monthly limit -->
+        <div class="vt-flex-1 vt-min-w-0 vt-flex vt-flex-col vt-justify-center">
+          <p class="vt-caption">Spent this month</p>
+          <p class="vt-text-2xl vt-font-bold vt-mt-1">
+            <span id="feat-spent">{money(first.spent)}</span>
+            <span class="vt-text-base vt-font-medium vt-text-mains-quaternary">/ <span id="feat-limit">{money(first.limit)}</span></span>
+          </p>
+          <div class="vt-progress vt-mt-3"><div id="feat-prog" class="vt-progress-bar" style={`width:${pct(first)}%`}></div></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-mt-2 vt-text-sm">
+            <span class="vt-text-mains-quaternary">Available</span>
+            <span id="feat-avail" class="vt-font-medium">{money(first.limit - first.spent)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vt-separator"></div>
+
+      <!-- Controls (contextual to the selected card) -->
+      <div>
+        <h2 class="vt-text-sm vt-font-semibold">Card controls · <span id="ctrl-last">•••• {first.last}</span></h2>
+        <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-3 vt-gap-4 vt-mt-4">
+          {controls.map((ctl) => (
+            <div class="vt-rounded-xl vt-border vt-border-border-default vt-p-4">
+              <div class="vt-flex vt-items-center vt-justify-between vt-gap-2">
+                <div class="vt-icon-badge vt-icon-badge-sm vt-text-mains-secondary"><ctl.icon class="vt-w-4 vt-h-4" /></div>
+                <button
+                  role="switch"
+                  aria-checked={ctl.on ? 'true' : 'false'}
+                  class={`vt-switch vt-flex-shrink-0 ${ctl.on ? 'vt-active vt-bg-accents-brand' : 'vt-bg-surfaces-moderate'}`}
+                ><span class="vt-switch-thumb"></span></button>
+              </div>
+              <p class="vt-text-sm vt-font-medium vt-mt-3">{ctl.title}</p>
+              <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">{ctl.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallet: pick a card -->
+    <div class="vt-card vt-p-6">
+      <h2 class="vt-text-sm vt-font-semibold">Your cards</h2>
+      <div class="vt-space-y-2 vt-mt-4">
+        {cards.map((c, i) => (
+          <button
+            type="button"
+            data-card-select
+            data-name={c.name} data-kind={c.kind} data-last={c.last} data-exp={c.exp}
+            data-holder={c.holder} data-net={c.net} data-brand={c.brand ? '1' : '0'}
+            data-spent={c.spent} data-limit={c.limit}
+            class={`vt-flex vt-items-center vt-gap-3 vt-w-full vt-text-left vt-rounded-xl vt-border vt-p-3 vt-transition-colors ${i === 0 ? 'vt-border-accents-brand vt-bg-surfaces-subtle' : 'vt-border-border-default vt-hover:bg-surfaces-subtle'}`}
+          >
+            <span class="vt-w-12 vt-h-8 vt-flex-shrink-0" style={`background:${swatch(c.brand)};border-radius:calc(var(--radius-xl) - var(--spacing-3))`}></span>
+            <span class="vt-min-w-0 vt-flex-1">
+              <span class="vt-block vt-text-sm vt-font-medium vt-truncate">{c.name} · {c.kind}</span>
+              <span class="vt-block vt-text-xs vt-text-mains-quaternary">•••• {c.last}</span>
+            </span>
+            <span class="vt-badge vt-badge-soft vt-badge-success">Active</span>
+          </button>
+        ))}
+      </div>
+      <button class="vt-btn vt-btn-bordered vt-w-full vt-mt-4" data-modal-open="new-card-modal"><Plus class="vt-w-4 vt-h-4" /> Add card</button>
+    </div>
+  </div>
+
+  <!-- Recent card activity -->
+  <div class="vt-rounded-xl vt-border vt-border-border-default vt-bg-surfaces-surface vt-overflow-hidden">
+    <div class="vt-flex vt-items-center vt-justify-between vt-gap-4 vt-p-6 vt-border-b vt-border-border-default">
+      <h2 class="vt-text-sm vt-font-semibold">Recent card activity</h2>
+      <a href="/transactions" class="vt-link">View all</a>
+    </div>
+    <div class="vt-divide-y vt-divide-border-default">
+      {activity.map((t) => (
+        <div class="vt-flex vt-items-center vt-justify-between vt-gap-3 vt-px-6 vt-py-3">
+          <div class="vt-flex vt-items-center vt-gap-3 vt-min-w-0">
+            <div class="vt-icon-badge vt-icon-badge-sm vt-text-mains-secondary"><ArrowUpRight class="vt-w-4 vt-h-4" /></div>
+            <div class="vt-min-w-0">
+              <p class="vt-text-sm vt-font-medium vt-truncate">{t.name}</p>
+              <p class="vt-text-xs vt-text-mains-quaternary">{t.cat}</p>
+            </div>
+          </div>
+          <div class="vt-flex vt-items-center vt-gap-4 vt-flex-shrink-0">
+            <span class="vt-text-xs vt-text-mains-quaternary">{t.date}</span>
+            <span class="vt-text-sm vt-font-medium vt-whitespace-nowrap">{t.amount}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- New card -->
+  <div id="new-card-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="new-card-title">
+    <div class="vt-dialog vt-overflow-visible">
+      <div class="vt-p-6">
+        <h3 id="new-card-title" class="vt-text-lg vt-font-semibold">Issue a new card</h3>
+        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Virtual cards are ready instantly.</p>
+        <div class="vt-space-y-4 vt-mt-5">
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="card-label">Card name</label>
+            <input id="card-label" class="vt-input" type="text" placeholder="e.g. Marketing" />
+          </div>
+          <div>
+            <label class="vt-label vt-mb-1.5 vt-block">Type</label>
+            <div class="vt-select-wrapper vt-relative">
+              <div class="vt-select-trigger">
+                <span data-select-label>Virtual — instant</span>
+                <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+              </div>
+              <div class="vt-select-dropdown">
+                <div class="vt-select-item" aria-selected="true">Virtual — instant</div>
+                <div class="vt-select-item">Physical — ships in 5 days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
+        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button class="vt-btn vt-btn-primary" data-modal-close><Plus class="vt-w-4 vt-h-4" /> Create card</button>
+      </div>
+    </div>
+  </div>
+
+  <FlorinModals />
+
+  <script is:inline>
+    (function () {
+      var brandGrad = 'linear-gradient(135deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.72))';
+      var graphite  = 'linear-gradient(135deg, hsl(222 14% 27%), hsl(222 16% 12%))';
+      var money = function (n) { return '$' + Number(n).toLocaleString('en-US'); };
+      var $ = function (id) { return document.getElementById(id); };
+      var items = document.querySelectorAll('[data-card-select]');
+      function select(btn) {
+        items.forEach(function (b) {
+          b.classList.remove('vt-border-accents-brand', 'vt-bg-surfaces-subtle', 'vt-hover:bg-surfaces-subtle');
+          b.classList.add('vt-border-border-default', 'vt-hover:bg-surfaces-subtle');
+        });
+        btn.classList.remove('vt-border-border-default', 'vt-hover:bg-surfaces-subtle');
+        btn.classList.add('vt-border-accents-brand', 'vt-bg-surfaces-subtle');
+        var d = btn.dataset, brand = d.brand === '1';
+        $('feat-name').textContent = d.name;
+        $('feat-kind').textContent = d.kind;
+        $('feat-net').textContent = d.net;
+        $('feat-num').textContent = '•••• •••• •••• ' + d.last;
+        $('feat-holder').textContent = d.holder;
+        $('feat-exp').textContent = d.exp;
+        $('feat-card').style.background = brand ? brandGrad : graphite;
+        var spent = +d.spent, limit = +d.limit;
+        $('feat-spent').textContent = money(spent);
+        $('feat-limit').textContent = money(limit);
+        $('feat-avail').textContent = money(limit - spent);
+        $('feat-prog').style.width = Math.round((spent / limit) * 100) + '%';
+        $('ctrl-last').textContent = '•••• ' + d.last;
+      }
+      items.forEach(function (b) { b.addEventListener('click', function () { select(b); }); });
+    })();
+  </script>
+</FlorinShell>
