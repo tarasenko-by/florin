@@ -277,3 +277,5 @@ html.dark:not([data-theme]), html.dark[data-theme="custom-theme"] {
   --error-fill-disabled: 12 58% 24%;
   --error-text: 3 88% 84%;
 }
+
+/* tweaked by hand — Veritheme must notice */
