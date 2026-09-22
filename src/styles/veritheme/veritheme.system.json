@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "name": "тест",
-  "revision": "28ecb4507f07",
-  "tokenSha256": "28ecb4507f07e9571eb58e64395528fae5015d27a2e5de8de7f85cce57caaf71",
+  "revision": "6259222e723a",
+  "tokenSha256": "6259222e723a01739a915ef6531e8811e3befbe1311321067083b448d5f1c29b",
   "libraryVersion": "1.1.1",
   "tokens": "tokens.json",
   "source": "system.json",

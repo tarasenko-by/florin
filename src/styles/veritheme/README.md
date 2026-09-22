@@ -1,6 +1,6 @@
 # тест — managed by Veritheme
 
-Revision `28ecb4507f07`, Veritheme `1.1.1`.
+Revision `6259222e723a`, Veritheme `1.1.1`.
 
 Everything in this directory is generated. Veritheme opens a pull request
 with a new copy on every release, so edits made here are replaced the next

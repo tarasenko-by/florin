@@ -1,13 +1,13 @@
 :root, html[data-theme="custom-theme"] {
   --font-family-base: Inter, system-ui, sans-serif;
   --radius-none: 0;
-  --radius-xs: 0;
-  --radius-sm: 0;
-  --radius-md: 0;
-  --radius-lg: 0;
-  --radius-xl: 0;
-  --radius-2xl: 0;
-  --radius-3xl: 0;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
   --radius-full: 9999px;
   --border-width-none: 0;
   --border-width-thin: 1px;
@@ -87,7 +87,7 @@
   --spacing-0_5: 0.125rem;
   --spacing-1_5: 0.375rem;
   --info-fill: 219 88% 54%;
-  --brand-fill: 138 100% 50%;
+  --brand-fill: 305 100% 50%;
   --error-fill: 4 83% 55%;
   --focus-ring: 219 88% 54%;
   --info-border: 216 92% 90%;
@@ -117,19 +117,19 @@
   --neutral-fill-pressed: 245 10% 88%;
   --foreground-secondary: 228 4% 25%;
   --neutral-fill-disabled: 0 0% 98%;
-  --brand-50: 119 100% 97%;
-  --brand-100: 121 100% 89%;
-  --brand-200: 138 100% 50%;
-  --brand-300: 138 100% 45%;
-  --brand-400: 140 100% 36%;
-  --brand-500: 146 100% 27%;
-  --brand-600: 145 100% 23%;
-  --brand-700: 144 100% 20%;
-  --brand-800: 141 100% 16%;
-  --brand-900: 137 100% 12%;
-  --brand-950: 131 100% 8%;
-  --brand-fill-hover: var(--brand-300);
-  --brand-fill-pressed: var(--brand-400);
+  --brand-50: 312 62% 98%;
+  --brand-100: 311 76% 95%;
+  --brand-200: 311 89% 90%;
+  --brand-300: 309 98% 81%;
+  --brand-400: 305 100% 50%;
+  --brand-500: 308 100% 39%;
+  --brand-600: 308 100% 33%;
+  --brand-700: 308 100% 28%;
+  --brand-800: 307 100% 23%;
+  --brand-900: 307 100% 17%;
+  --brand-950: 306 100% 12%;
+  --brand-fill-hover: var(--brand-500);
+  --brand-fill-pressed: var(--brand-600);
   --brand-fill-disabled: var(--brand-200);
   --error-50: 0 100% 99%;
   --error-100: 0 96% 96%;
@@ -187,7 +187,7 @@
   --warning-900: 22 60% 14%;
   --warning-950: 30 100% 10%;
   --on-neutral: 240 3% 6%;
-  --on-brand: 131 100% 8%;
+  --on-brand: 0 0% 100%;
   --on-info: 0 0% 100%;
   --on-success: 0 0% 100%;
   --on-error: 0 0% 100%;
@@ -212,7 +212,7 @@
 
 html.dark:not([data-theme]), html.dark[data-theme="custom-theme"] {
   --info-fill: 219 88% 54%;
-  --brand-fill: 138 100% 50%;
+  --brand-fill: 305 100% 50%;
   --error-fill: 4 83% 55%;
   --focus-ring: 218 88% 69%;
   --info-border: 226 70% 32%;
@@ -240,22 +240,22 @@ html.dark:not([data-theme]), html.dark[data-theme="custom-theme"] {
   --neutral-fill-pressed: 228 4% 34%;
   --foreground-secondary: 245 10% 88%;
   --neutral-fill-disabled: 240 4% 15%;
-  --brand-50: 119 100% 97%;
-  --brand-100: 121 100% 89%;
-  --brand-200: 138 100% 50%;
-  --brand-300: 138 100% 45%;
-  --brand-400: 140 100% 36%;
-  --brand-500: 146 100% 27%;
-  --brand-600: 145 100% 23%;
-  --brand-700: 144 100% 20%;
-  --brand-800: 141 100% 16%;
-  --brand-900: 137 100% 12%;
-  --brand-950: 131 100% 8%;
-  --brand-fill-hover: var(--brand-300);
-  --brand-fill-pressed: var(--brand-400);
+  --brand-50: 312 62% 98%;
+  --brand-100: 311 76% 95%;
+  --brand-200: 311 89% 90%;
+  --brand-300: 309 98% 81%;
+  --brand-400: 305 100% 50%;
+  --brand-500: 308 100% 39%;
+  --brand-600: 308 100% 33%;
+  --brand-700: 308 100% 28%;
+  --brand-800: 307 100% 23%;
+  --brand-900: 307 100% 17%;
+  --brand-950: 306 100% 12%;
+  --brand-fill-hover: var(--brand-500);
+  --brand-fill-pressed: var(--brand-600);
   --brand-fill-disabled: var(--brand-900);
   --on-neutral: 0 0% 98%;
-  --on-brand: 131 100% 8%;
+  --on-brand: 0 0% 100%;
   --on-info: 0 0% 100%;
   --on-success: 0 0% 100%;
   --on-error: 0 0% 100%;
@@ -277,5 +277,3 @@ html.dark:not([data-theme]), html.dark[data-theme="custom-theme"] {
   --error-fill-disabled: 12 58% 24%;
   --error-text: 3 88% 84%;
 }
-
-/* tweaked by hand — Veritheme must notice */
