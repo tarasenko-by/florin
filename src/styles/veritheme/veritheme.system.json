@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "name": "тест",
+  "revision": "28ecb4507f07",
+  "tokenSha256": "28ecb4507f07e9571eb58e64395528fae5015d27a2e5de8de7f85cce57caaf71",
+  "libraryVersion": "1.1.1",
+  "tokens": "tokens.json",
+  "source": "system.json",
+  "css": "theme.css"
+}
