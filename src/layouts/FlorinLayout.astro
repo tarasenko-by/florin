@@ -1,11 +1,18 @@
 ---
 // Standalone Florin layout: page chrome + live re-theming toolbar.
 // All styling comes from the published veritheme package (CSS-only design
-// system); themes switch via the data-theme attribute, dark via .dark.
+// system) plus florin.css for what the library does not ship. Florin's colour
+// themes (florin-themes.css) switch via data-theme on <html>, dark via .dark.
 import 'veritheme/css';
 import '../styles/florin.css';
+import '../styles/florin-themes.css';
 import { Moon, Sun, Palette } from '@lucide/astro';
-import themeManifest from 'veritheme/theme-manifest';
+
+// Florin's own themes, derived from one brand colour (see florin-themes.css).
+const themes = [
+  { name: 'default', label: 'Blue' },
+  { name: 'florin-mint', label: 'Mint' },
+];
 
 interface Props {
   title: string;
@@ -22,7 +29,7 @@ const { title, description } = Astro.props;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta property="og:title" content={title} />
@@ -39,7 +46,7 @@ const { title, description } = Astro.props;
       var root = document.documentElement;
       try {
         var theme = localStorage.getItem('florin-theme');
-        if (theme) root.setAttribute('data-theme', theme);
+        if (theme === 'default' || theme === 'florin-mint') root.setAttribute('data-theme', theme);
       } catch (e) {}
       if (!root.hasAttribute('data-theme')) root.setAttribute('data-theme', 'default');
       try {
@@ -50,24 +57,24 @@ const { title, description } = Astro.props;
     })();
   </script>
 </head>
-<body class="vt-bg-surfaces-background vt-text-mains-primary vt-min-h-screen">
+<body class="vt-bg-surface-page vt-text-foreground-primary vt-min-h-screen">
   <slot />
 
-  <!-- Theming toolbar: pick a Veritheme preset + toggle dark mode. -->
-  <div data-theme-toolbar class="vt-toolbar vt-fixed vt-bottom-4 vt-right-4 vt-z-50 vt-shadow-lg">
+  <!-- Theming toolbar: pick a Florin colour theme + toggle dark mode. -->
+  <div data-theme-toolbar class="vt-toolbar vt-toolbar-floating vt-fixed vt-bottom-4 vt-right-4 vt-z-50">
     <div id="theme-panel" class="vt-hidden vt-items-center vt-gap-1">
-      <select id="theme-select" class="vt-select-trigger vt-h-10 vt-w-40" aria-label="Theme preset">
-        {themeManifest.map((t) => (
-          <option value={t.name}>{t.label}</option>
+      <div class="vt-btn-group" role="group" aria-label="Colour theme">
+        {themes.map((th) => (
+          <button type="button" class="vt-btn vt-btn-secondary vt-btn-sm" data-theme-pick={th.name} aria-pressed="false"><span>{th.label}</span></button>
         ))}
-      </select>
-      <button id="mode-toggle" type="button" class="vt-toolbar-btn" title="Toggle dark mode" aria-pressed="false">
-        <span id="mode-moon" class="vt-flex"><Moon class="vt-w-4 vt-h-4 vt-text-mains-secondary" /></span>
-        <span id="mode-sun" class="vt-hidden"><Sun class="vt-w-4 vt-h-4 vt-text-mains-secondary" /></span>
+      </div>
+      <button id="mode-toggle" type="button" class="vt-toolbar-btn" title="Toggle dark mode" aria-label="Toggle dark mode" aria-pressed="false">
+        <span id="mode-moon" class="vt-flex"><Moon class="vt-w-4 vt-h-4" /></span>
+        <span id="mode-sun" class="vt-hidden"><Sun class="vt-w-4 vt-h-4" /></span>
       </button>
     </div>
-    <button id="theme-fab" type="button" class="vt-toolbar-btn" title="Theme options" aria-expanded="false" aria-controls="theme-panel">
-      <Palette class="vt-w-4 vt-h-4 vt-text-mains-secondary" />
+    <button id="theme-fab" type="button" class="vt-toolbar-btn" title="Theme options" aria-label="Theme options" aria-expanded="false" aria-controls="theme-panel">
+      <Palette class="vt-w-4 vt-h-4" />
     </button>
   </div>
 
@@ -76,7 +83,7 @@ const { title, description } = Astro.props;
       var root = document.documentElement;
       var fab = document.getElementById('theme-fab');
       var panel = document.getElementById('theme-panel');
-      var themeSelect = document.getElementById('theme-select');
+      var picks = document.querySelectorAll('[data-theme-pick]');
       var modeBtn = document.getElementById('mode-toggle');
       var moon = document.getElementById('mode-moon');
       var sun = document.getElementById('mode-sun');
@@ -87,10 +94,22 @@ const { title, description } = Astro.props;
         fab.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
 
-      themeSelect.value = root.getAttribute('data-theme') || 'default';
-      themeSelect.addEventListener('change', function () {
-        root.setAttribute('data-theme', themeSelect.value);
-        try { localStorage.setItem('florin-theme', themeSelect.value); } catch (e) {}
+      function syncTheme() {
+        var current = root.getAttribute('data-theme') || 'default';
+        picks.forEach(function (b) {
+          var on = b.getAttribute('data-theme-pick') === current;
+          b.classList.toggle('vt-active', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+      }
+      syncTheme();
+      picks.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var name = b.getAttribute('data-theme-pick');
+          root.setAttribute('data-theme', name);
+          try { localStorage.setItem('florin-theme', name); } catch (e) {}
+          syncTheme();
+        });
       });
 
       // Reflect the current dark state (set pre-paint from OS/stored) in the toggle.

@@ -32,23 +32,24 @@ const rows = [
   <!-- Title + actions -->
   <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
     <div>
-      <h1 class="vt-text-2xl vt-font-bold">Transactions</h1>
-      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">1,284 transactions · net +$33,360 this quarter</p>
+      <h1 class="vt-heading-md">Transactions</h1>
+      <p class="vt-body-sm vt-text-foreground-muted vt-mt-1">1,284 transactions · net +$33,360 this quarter</p>
     </div>
     <div class="vt-flex vt-items-center vt-gap-2">
-      <div class="vt-relative vt-hidden vt-sm:block">
-        <button class="vt-btn vt-btn-bordered" data-dropdown-trigger="tx-filter-menu"><ListFilter class="vt-w-4 vt-h-4" /> Filter</button>
-        <div id="tx-filter-menu" data-menu class="vt-hidden vt-absolute vt-right-0 vt-top-full vt-mt-2 vt-w-56 vt-p-1 vt-rounded-xl vt-border vt-border-border-default vt-bg-surfaces-surface vt-shadow-lg vt-z-50">
-          <p class="vt-section-label vt-px-3 vt-py-2">Status</p>
+      <!-- Status filter: Dropdown Menu (the shell keeps it open on inner clicks) -->
+      <div class="vt-dropdown-wrap vt-hidden vt-sm:flex">
+        <button type="button" class="vt-btn vt-btn-bordered" data-dropdown-trigger="tx-filter-menu" aria-haspopup="menu" aria-expanded="false"><ListFilter class="vt-w-4 vt-h-4" /> Filter</button>
+        <div id="tx-filter-menu" class="vt-dropdown-menu fl-menu-end" role="menu">
+          <div class="vt-dropdown-label">Status</div>
           {['Settled', 'Cleared', 'Pending', 'Failed'].map((s) => (
-            <label class="vt-command-item vt-cursor-pointer">
-              <input type="checkbox" class="vt-checkbox" value={s.toLowerCase()} data-tx-status-filter />
-              <span class="vt-text-sm">{s}</span>
+            <label class="vt-command-item">
+              <input type="checkbox" class="vt-checkbox fl-native-check" value={s.toLowerCase()} data-tx-status-filter />
+              <span>{s}</span>
             </label>
           ))}
         </div>
       </div>
-      <button class="vt-btn vt-btn-bordered"><Download class="vt-w-4 vt-h-4" /> Export</button>
+      <button type="button" class="vt-btn vt-btn-bordered"><Download class="vt-w-4 vt-h-4" /> Export</button>
     </div>
   </div>
 
@@ -56,65 +57,63 @@ const rows = [
   <div class="vt-flex vt-flex-wrap vt-items-center vt-justify-between vt-gap-3">
     <div class="vt-btn-group">
       {filters.map((f, i) => (
-        <button class={i === 0 ? 'vt-active' : undefined} data-tx-filter={f.value}>{f.label}</button>
+        <button type="button" class={i === 0 ? 'vt-active' : undefined} data-tx-filter={f.value}>{f.label}</button>
       ))}
     </div>
-    <div class="vt-relative vt-flex vt-items-center vt-w-full vt-sm:w-64">
-      <Search class="vt-w-4 vt-h-4 vt-absolute vt-left-3 vt-text-mains-quaternary" />
+    <div class="vt-input-group fl-tx-search">
+      <Search class="vt-input-icon" />
       <input class="vt-input vt-input-sm vt-pl-10" type="search" placeholder="Search merchant…" aria-label="Search transactions" data-tx-search />
     </div>
   </div>
 
-  <!-- Ledger: standalone data-table container — rounded-xl + clipped corners
-       (per the Veritheme data-table component) with a surface background so it
-       reads as a card rather than a transparent block on the page. -->
-  <div class="vt-rounded-xl vt-border vt-border-border-default vt-bg-surfaces-surface vt-overflow-hidden">
+  <!-- Ledger: Table component (frame, header band, row separators) -->
+  <div class="vt-table-wrap">
     <div class="vt-overflow-x-auto">
-      <table class="vt-w-full vt-border-collapse vt-text-sm">
+      <table class="vt-table">
         <thead>
-          <tr class="vt-text-left vt-text-xs vt-text-mains-quaternary vt-bg-surfaces-subtle">
-            <th class="vt-font-medium vt-px-6 vt-py-3" data-sort="name">
-              <span class="vt-flex vt-items-center vt-gap-1">Merchant <ArrowDownUp class="vt-w-3 vt-h-3 vt-text-mains-quaternary" /></span>
+          <tr>
+            <th scope="col" data-sort="name">
+              <button type="button" class="vt-table-sort">Merchant <ArrowDownUp /></button>
             </th>
-            <th class="vt-font-medium vt-px-6 vt-py-3 vt-hidden vt-md:table-cell">Account</th>
-            <th class="vt-font-medium vt-px-6 vt-py-3 vt-hidden vt-lg:table-cell">Method</th>
-            <th class="vt-font-medium vt-px-6 vt-py-3 vt-hidden vt-sm:table-cell" data-sort="day">
-              <span class="vt-flex vt-items-center vt-gap-1">Date <ArrowDownUp class="vt-w-3 vt-h-3 vt-text-mains-quaternary" /></span>
+            <th scope="col" class="vt-hidden vt-md:table-cell">Account</th>
+            <th scope="col" class="vt-hidden vt-md:table-cell">Method</th>
+            <th scope="col" class="vt-hidden vt-md:table-cell" data-sort="day">
+              <button type="button" class="vt-table-sort">Date <ArrowDownUp /></button>
             </th>
-            <th class="vt-font-medium vt-px-6 vt-py-3">Status</th>
-            <th class="vt-font-medium vt-px-6 vt-py-3 vt-text-right" data-sort="amount">
-              <span class="vt-flex vt-items-center vt-justify-end vt-gap-1">Amount <ArrowDownUp class="vt-w-3 vt-h-3 vt-text-mains-quaternary" /></span>
+            <th scope="col">Status</th>
+            <th scope="col" class="vt-table-numeric" data-sort="amount">
+              <button type="button" class="vt-table-sort">Amount <ArrowDownUp /></button>
             </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr class="vt-border-t vt-border-border-default vt-hover:bg-surfaces-subtle vt-transition-colors vt-cursor-pointer" data-tx-row data-tx-type={r.type} data-tx-status={r.status.toLowerCase()} data-tx-name={r.name} data-sort-name={r.name} data-sort-day={r.day} data-sort-amount={r.amt} data-tx={JSON.stringify(r)}>
-              <td class="vt-px-6 vt-py-3">
+            <tr class="fl-tx-row" data-tx-row data-tx-type={r.type} data-tx-status={r.status.toLowerCase()} data-tx-name={r.name} data-sort-name={r.name} data-sort-day={r.day} data-sort-amount={r.amt} data-tx={JSON.stringify(r)}>
+              <td>
                 <div class="vt-flex vt-items-center vt-gap-3">
-                  <div class={`vt-icon-badge vt-icon-badge-sm ${r.pos ? 'vt-text-success-primary' : 'vt-text-mains-secondary'}`}>
+                  <div class={`vt-icon-badge vt-icon-badge-sm ${r.pos ? 'fl-tone-success' : ''}`}>
                     {r.pos ? <ArrowDownLeft class="vt-w-4 vt-h-4" /> : <ArrowUpRight class="vt-w-4 vt-h-4" />}
                   </div>
                   <div class="vt-min-w-0">
-                    <p class="vt-font-medium vt-truncate">{r.name}</p>
-                    <p class="vt-text-xs vt-text-mains-quaternary">{r.cat}</p>
+                    <p class="vt-label-md vt-truncate">{r.name}</p>
+                    <p class="vt-caption vt-text-foreground-muted">{r.cat}</p>
                   </div>
                 </div>
               </td>
-              <td class="vt-px-6 vt-py-3 vt-text-mains-secondary vt-hidden vt-md:table-cell">{r.acct}</td>
-              <td class="vt-px-6 vt-py-3 vt-text-mains-secondary vt-hidden vt-lg:table-cell">{r.method}</td>
-              <td class="vt-px-6 vt-py-3 vt-text-mains-secondary vt-whitespace-nowrap vt-hidden vt-sm:table-cell">{r.date}</td>
-              <td class="vt-px-6 vt-py-3"><span class={`vt-badge vt-badge-soft ${r.tone}`}>{r.status}</span></td>
-              <td class={`vt-px-6 vt-py-3 vt-text-right vt-font-medium vt-whitespace-nowrap ${r.pos ? 'vt-text-success-primary' : ''}`}>{r.amount}</td>
+              <td class="vt-table-muted vt-hidden vt-md:table-cell">{r.acct}</td>
+              <td class="vt-table-muted vt-hidden vt-md:table-cell">{r.method}</td>
+              <td class="vt-table-muted vt-whitespace-nowrap vt-hidden vt-md:table-cell">{r.date}</td>
+              <td><span class={`vt-badge vt-badge-soft ${r.tone}`}>{r.status}</span></td>
+              <td class={`vt-table-numeric vt-table-strong vt-whitespace-nowrap ${r.pos ? 'fl-text-success' : ''}`}>{r.amount}</td>
             </tr>
           ))}
           <tr data-tx-empty class="vt-hidden">
-            <td colspan="6" class="vt-px-6 vt-py-16 vt-text-center">
-              <div class="vt-flex vt-flex-col vt-items-center">
-                <div class="vt-icon-badge vt-text-mains-quaternary vt-mb-3"><SearchX class="vt-w-5 vt-h-5" /></div>
-                <p class="vt-text-sm vt-font-medium">No transactions match your filters</p>
-                <p class="vt-text-xs vt-text-mains-quaternary vt-mt-1">Try a different search, or clear the filters to see everything.</p>
-                <button class="vt-btn vt-btn-bordered vt-btn-sm vt-mt-4" data-tx-clear>Clear filters</button>
+            <td colspan="6">
+              <div class="vt-flex vt-flex-col vt-items-center vt-text-center vt-py-12">
+                <div class="vt-icon-badge vt-mb-3"><SearchX class="vt-w-5 vt-h-5" /></div>
+                <p class="vt-label-md">No transactions match your filters</p>
+                <p class="vt-caption vt-text-foreground-muted vt-mt-1">Try a different search, or clear the filters to see everything.</p>
+                <button type="button" class="vt-btn vt-btn-bordered vt-btn-sm vt-mt-4" data-tx-clear>Clear filters</button>
               </div>
             </td>
           </tr>
@@ -123,16 +122,16 @@ const rows = [
     </div>
 
     <!-- Footer: count + pagination -->
-    <div class="vt-card-footer vt-flex vt-items-center vt-justify-between vt-gap-4">
-      <p class="vt-text-xs vt-text-mains-quaternary vt-hidden vt-sm:block">Showing 1–10 of 1,284</p>
-      <nav class="vt-flex vt-items-center vt-gap-1" aria-label="Pagination">
-        <button class="vt-page-btn" disabled title="Previous page"><ChevronLeft class="vt-w-4 vt-h-4" /></button>
-        <button class="vt-page-btn vt-active">1</button>
-        <button class="vt-page-btn">2</button>
-        <button class="vt-page-btn">3</button>
-        <span class="vt-px-2 vt-text-mains-quaternary">…</span>
-        <button class="vt-page-btn vt-hidden vt-sm:flex">129</button>
-        <button class="vt-page-btn" title="Next page"><ChevronRight class="vt-w-4 vt-h-4" /></button>
+    <div class="vt-table-footer">
+      <span class="vt-hidden vt-sm:flex">Showing 1–10 of 1,284</span>
+      <nav class="vt-pagination" aria-label="Pagination">
+        <button type="button" class="vt-page-btn" disabled aria-label="Previous page"><ChevronLeft class="vt-w-4 vt-h-4" /></button>
+        <button type="button" class="vt-page-btn vt-active" aria-current="page">1</button>
+        <button type="button" class="vt-page-btn">2</button>
+        <button type="button" class="vt-page-btn">3</button>
+        <span class="vt-pagination-ellipsis">…</span>
+        <button type="button" class="vt-page-btn vt-hidden vt-sm:flex">129</button>
+        <button type="button" class="vt-page-btn" aria-label="Next page"><ChevronRight class="vt-w-4 vt-h-4" /></button>
       </nav>
     </div>
   </div>
@@ -140,24 +139,24 @@ const rows = [
   <!-- Transaction detail (populated on row click) -->
   <div id="tx-detail-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="tx-detail-title">
     <div class="vt-dialog">
-      <div class="vt-p-6">
-        <div class="vt-flex vt-items-start vt-justify-between vt-gap-4">
-          <div class="vt-min-w-0">
-            <h3 id="tx-detail-title" data-d-name class="vt-text-lg vt-font-semibold vt-truncate">—</h3>
-            <p data-d-cat class="vt-text-sm vt-text-mains-quaternary vt-mt-0.5">—</p>
-          </div>
-          <span data-d-amount class="vt-text-xl vt-font-bold vt-whitespace-nowrap">—</span>
+      <div class="vt-dialog-header">
+        <div class="vt-dialog-heading">
+          <h3 id="tx-detail-title" data-d-name class="vt-dialog-title vt-truncate">—</h3>
+          <p data-d-cat class="vt-dialog-description">—</p>
         </div>
-        <div class="vt-divide-y vt-divide-border-default vt-mt-5 vt-text-sm">
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-mains-quaternary">Date</span><span data-d-date class="vt-font-medium">—</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-mains-quaternary">Account</span><span data-d-acct class="vt-font-medium">—</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-mains-quaternary">Method</span><span data-d-method class="vt-font-medium">—</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-mains-quaternary">Status</span><span data-d-status class="vt-badge vt-badge-soft">—</span></div>
+        <span data-d-amount class="vt-heading-sm vt-whitespace-nowrap">—</span>
+      </div>
+      <div class="vt-dialog-body">
+        <div class="vt-divide-y vt-divide-border-default vt-body-sm">
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-foreground-muted">Date</span><span data-d-date class="vt-label-md">—</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-foreground-muted">Account</span><span data-d-acct class="vt-label-md">—</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-foreground-muted">Method</span><span data-d-method class="vt-label-md">—</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-2"><span class="vt-text-foreground-muted">Status</span><span data-d-status class="vt-badge vt-badge-soft">—</span></div>
         </div>
       </div>
-      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
-        <button class="vt-btn vt-btn-ghost" data-modal-close>Close</button>
-        <button class="vt-btn vt-btn-bordered" data-modal-close><Download class="vt-w-4 vt-h-4" /> Receipt</button>
+      <div class="vt-dialog-footer">
+        <button type="button" class="vt-btn vt-btn-ghost" data-modal-close>Close</button>
+        <button type="button" class="vt-btn vt-btn-bordered" data-modal-close><Download class="vt-w-4 vt-h-4" /> Receipt</button>
       </div>
     </div>
   </div>
@@ -173,7 +172,7 @@ const rows = [
           var d; try { d = JSON.parse(row.getAttribute('data-tx')); } catch (err) { return; }
           set('[data-d-name]', d.name); set('[data-d-cat]', d.cat);
           var amt = modal.querySelector('[data-d-amount]');
-          amt.textContent = d.amount; amt.classList.toggle('vt-text-success-primary', !!d.pos);
+          amt.textContent = d.amount; amt.classList.toggle('fl-text-success', !!d.pos);
           set('[data-d-date]', d.date); set('[data-d-acct]', d.acct); set('[data-d-method]', d.method);
           var st = modal.querySelector('[data-d-status]');
           st.textContent = d.status; st.className = 'vt-badge vt-badge-soft ' + d.tone;
@@ -183,3 +182,16 @@ const rows = [
     })();
   </script>
 </FlorinShell>
+
+<style>
+  /* Ledger rows open the detail dialog; Table itself has no row hover or pointer. */
+  .fl-tx-row { cursor: pointer; transition: background-color var(--vt-transition-fast); }
+  .fl-tx-row:hover { background: hsl(var(--vt-surface-subtle)); }
+  /* The status filters stay native inputs (the shell reads .checked); tint them with the brand. */
+  .fl-native-check { accent-color: hsl(var(--vt-brand-fill)); }
+  /* Search is full-width on phones and 256px from 640px up (1.2.1 has no vt-sm:w-64). */
+  .fl-tx-search { width: 100%; }
+  @media (min-width: 640px) {
+    .fl-tx-search { width: var(--vt-spacing-64); }
+  }
+</style>

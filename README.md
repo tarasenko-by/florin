@@ -6,11 +6,11 @@
 
 ## Live re-theming
 
-Every screen restyles itself instantly — fonts, radii, colors, dark mode — by switching a single `data-theme` attribute. No rebuild, no CSS-in-JS. The floating palette toolbar in the corner does it live.
+Every screen restyles itself instantly — brand color and dark mode — by switching a single `data-theme` attribute. No rebuild, no CSS-in-JS. The floating palette toolbar in the corner does it live: **Blue** is Veritheme's default theme, **Mint** is Florin's own theme, derived from one brand color.
 
-| Editorial theme | Rounded Sans · dark |
+| Mint theme | Mint · dark |
 | --- | --- |
-| ![Analytics — Editorial theme](.github/assets/analytics-editorial.png) | ![Cards — Rounded Sans dark](.github/assets/cards-rounded-dark.png) |
+| ![Analytics — Mint theme](.github/assets/analytics-mint.png) | ![Cards — Mint dark](.github/assets/cards-mint-dark.png) |
 
 ![Florin overview — dark](.github/assets/overview-dark.png)
 
@@ -42,15 +42,15 @@ npm run preview   # serve the production build
 ## How it's built
 
 - **[Astro](https://astro.build)** — every screen is a static `.astro` page; zero client-side framework.
-- **[Veritheme](https://github.com/tarasenko-by/veritheme)** — all styling comes from the published npm package (`veritheme`): utility classes, components, design tokens, theme presets. There is no custom CSS beyond a [28-line file](src/styles/florin.css) for the off-canvas drawer.
-- **Theming** — theme presets ship inside Veritheme's single CSS file and switch via `data-theme`; dark mode is a `.dark` class that follows the OS until the visitor picks explicitly.
+- **[Veritheme](https://github.com/tarasenko-by/veritheme)** 1.2 — styling comes from the published npm package (`veritheme`): components, utility classes and design tokens. What the library does not ship lives in Florin itself: [`florin.css`](src/styles/florin.css) for the app shell (edge sidebar, off-canvas drawer, menu placement, tinted icon tiles) and short `<style>` blocks in the few screens and components that need them (the bank card, the charts). All of it uses Veritheme's tokens — no hardcoded colors.
+- **Theming** — [`florin-themes.css`](src/styles/florin-themes.css) holds Florin's Mint theme, generated from one brand color by Veritheme's `derive_theme` tool; themes switch via `data-theme`. Dark mode is a `.dark` class that follows the OS until the visitor picks explicitly.
 - **Icons** — [Lucide](https://lucide.dev) via `@lucide/astro`.
 
 ## Use it as a starting point
 
 Fork it, swap the fake data for your API, and keep the shell. Because styling is plain CSS classes on plain HTML, porting a screen to React, Vue, Svelte, or a server-rendered stack is copy-paste — there are no framework components to translate.
 
-Want your own brand? Generate a theme on [veritheme.com](https://veritheme.com), drop the JSON/CSS in, and every screen follows.
+Want your own brand? Generate a theme in [Veritheme Studio](https://veritheme.com/studio/), add its CSS next to `florin-themes.css` and a button to the toolbar's theme list in `FlorinLayout.astro`, and every screen follows.
 
 ## License
 

@@ -1,23 +1,25 @@
 ---
-// Florin — Notifications. Full activity feed.
+// Florin — Notifications. Full activity feed: a List per day group; each row is
+// a button that marks the notification read.
 import FlorinShell from '../components/FlorinShell.astro';
 import { ArrowDownLeft, TriangleAlert, CircleCheck, Bell, CreditCard, Check } from '@lucide/astro';
 
+// tone: an fl-tone-* tint for the Icon Badge, or '' for the neutral badge.
 const groups = [
   {
     label: 'Today',
     items: [
-      { icon: ArrowDownLeft, tone: 'vt-text-success-primary', title: 'Payment received', desc: 'Stripe Payout · +$12,480.00', time: '2m ago', unread: true },
-      { icon: TriangleAlert,  tone: 'vt-text-error-primary',   title: 'Transfer failed',   desc: 'WeWork · $2,600.00 — insufficient funds', time: '1h ago', unread: true },
-      { icon: CircleCheck,    tone: 'vt-text-info-primary',    title: 'Invoice paid',      desc: 'Client · Aster · $5,400.00', time: '3h ago', unread: true },
+      { icon: ArrowDownLeft, tone: 'fl-tone-success', title: 'Payment received', desc: 'Stripe Payout · +$12,480.00', time: '2m ago', unread: true },
+      { icon: TriangleAlert,  tone: 'fl-tone-error',   title: 'Transfer failed',   desc: 'WeWork · $2,600.00 — insufficient funds', time: '1h ago', unread: true },
+      { icon: CircleCheck,    tone: 'fl-tone-info',    title: 'Invoice paid',      desc: 'Client · Aster · $5,400.00', time: '3h ago', unread: true },
     ],
   },
   {
     label: 'Earlier',
     items: [
-      { icon: CreditCard, tone: 'vt-text-mains-secondary', title: 'Card charged', desc: 'AWS · $2,314.90', time: 'Yesterday', unread: false },
-      { icon: Bell,       tone: 'vt-text-mains-secondary', title: 'Weekly summary is ready', desc: 'Net +$8,120 across all accounts', time: 'Mon', unread: false },
-      { icon: CircleCheck, tone: 'vt-text-info-primary',   title: 'Payout scheduled', desc: 'Ramp Payroll · $8,420.00 on Jul 28', time: 'Sun', unread: false },
+      { icon: CreditCard,  tone: '',             title: 'Card charged', desc: 'AWS · $2,314.90', time: 'Yesterday', unread: false },
+      { icon: Bell,        tone: '',             title: 'Weekly summary is ready', desc: 'Net +$8,120 across all accounts', time: 'Mon', unread: false },
+      { icon: CircleCheck, tone: 'fl-tone-info', title: 'Payout scheduled', desc: 'Ramp Payroll · $8,420.00 on Jul 28', time: 'Sun', unread: false },
     ],
   },
 ];
@@ -26,34 +28,36 @@ const groups = [
 <FlorinShell active="notifications" title="Florin — Notifications" description="Florin notifications — full activity feed. Built with Veritheme.">
   <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
     <div>
-      <h1 class="vt-text-2xl vt-font-bold">Notifications</h1>
-      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1"><span data-notif-count>3</span> unread · everything happening in your account.</p>
+      <h1 class="vt-heading-md">Notifications</h1>
+      <p class="vt-body-sm vt-text-foreground-muted vt-mt-1"><span data-notif-count>3</span> unread · everything happening in your account.</p>
     </div>
-    <button class="vt-btn vt-btn-bordered" data-notif-markall><Check class="vt-w-4 vt-h-4" /> Mark all read</button>
+    <button type="button" class="vt-btn vt-btn-bordered" data-notif-markall><Check class="vt-w-4 vt-h-4" /> Mark all read</button>
   </div>
 
   <div class="vt-max-w-2xl vt-space-y-6">
     {groups.map((g) => (
-      <div>
-        <p class="vt-section-label vt-mb-2">{g.label}</p>
-        <div class="vt-card">
-          <div class="vt-divide-y vt-divide-border-default">
-            {g.items.map((n) => (
-              <div data-notif class={`vt-flex vt-items-start vt-gap-3 vt-p-4 vt-cursor-pointer vt-hover:bg-surfaces-subtle vt-transition-colors ${n.unread ? 'vt-bg-brand-tint/40' : ''}`}>
-                <div class={`vt-icon-badge vt-icon-badge-sm ${n.tone}`}><n.icon class="vt-w-4 vt-h-4" /></div>
-                <div class="vt-min-w-0 vt-flex-1">
-                  <p class="vt-text-sm vt-font-medium">{n.title}</p>
-                  <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">{n.desc}</p>
-                </div>
-                <div class="vt-flex vt-items-center vt-gap-2 vt-flex-shrink-0">
-                  <span class="vt-text-xs vt-text-mains-quaternary vt-whitespace-nowrap">{n.time}</span>
-                  {n.unread && <span data-notif-dot class="vt-w-2 vt-h-2 vt-rounded-full vt-bg-accents-brand"></span>}
-                </div>
-              </div>
-            ))}
-          </div>
+      <section class="vt-list-section" aria-label={g.label}>
+        <h2 class="vt-section-label">{g.label}</h2>
+        <div class="vt-list">
+          {g.items.map((n) => (
+            <button
+              type="button"
+              data-notif
+              class:list={['vt-list-item vt-text-left', { 'vt-bg-brand-tint': n.unread }]}
+            >
+              <span class:list={['vt-icon-badge vt-icon-badge-sm', n.tone]}><n.icon class="vt-icon-badge-icon" /></span>
+              <span class="vt-list-item-content">
+                <span class="vt-list-item-title">{n.title}</span>
+                <span class="vt-list-item-description">{n.desc}</span>
+              </span>
+              <span class="vt-list-item-meta vt-flex vt-items-center vt-gap-2 vt-whitespace-nowrap">
+                {n.time}
+                {n.unread && <span data-notif-dot class="vt-dot vt-dot-brand" role="img" aria-label="Unread"></span>}
+              </span>
+            </button>
+          ))}
         </div>
-      </div>
+      </section>
     ))}
   </div>
 
@@ -65,7 +69,7 @@ const groups = [
         if (count) count.textContent = n;
       }
       function markRead(row) {
-        row.classList.remove('vt-bg-brand-tint/40');
+        row.classList.remove('vt-bg-brand-tint');
         var dot = row.querySelector('[data-notif-dot]');
         if (dot) dot.remove();
         refresh();

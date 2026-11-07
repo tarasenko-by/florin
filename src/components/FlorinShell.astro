@@ -20,9 +20,9 @@ interface Props {
 const { title, description, active } = Astro.props;
 
 const notifications = [
-  { icon: ArrowDownLeft,  tone: 'vt-text-success-primary', title: 'Payment received', desc: 'Stripe Payout · +$12,480.00', time: '2m' },
-  { icon: TriangleAlert,  tone: 'vt-text-error-primary',   title: 'Transfer failed',   desc: 'WeWork · $2,600.00',        time: '1h' },
-  { icon: CircleCheck,    tone: 'vt-text-info-primary',    title: 'Invoice paid',      desc: 'Client · Aster · $5,400.00', time: '3h' },
+  { icon: ArrowDownLeft,  tone: 'fl-tone-success', title: 'Payment received', desc: 'Stripe Payout · +$12,480.00', time: '2m' },
+  { icon: TriangleAlert,  tone: 'fl-tone-error',   title: 'Transfer failed',   desc: 'WeWork · $2,600.00',        time: '1h' },
+  { icon: CircleCheck,    tone: 'fl-tone-info',    title: 'Invoice paid',      desc: 'Client · Aster · $5,400.00', time: '3h' },
 ];
 
 const banking = [
@@ -50,125 +50,123 @@ const pages = [
   <div class="vt-flex vt-h-screen vt-overflow-hidden">
 
     <!-- Mobile drawer backdrop -->
-    <div data-sidebar-backdrop class="vt-hidden vt-fixed vt-inset-0 vt-z-30 vt-bg-generic-black/50 vt-lg:hidden"></div>
+    <div data-sidebar-backdrop class="vt-hidden vt-fixed vt-inset-0 vt-z-30 vt-bg-generic-black/50 vt-md:hidden"></div>
 
-    <!-- Sidebar (static on desktop; off-canvas drawer under lg — see <style> below) -->
-    <aside data-sidebar class="vt-flex vt-flex-col vt-w-64 vt-flex-shrink-0 vt-border-r vt-border-border-default vt-bg-surfaces-surface">
-      <div class="vt-h-14 vt-flex vt-items-center vt-px-5 vt-border-b vt-border-border-default">
-        <a href="/overview" class="vt-flex vt-items-center vt-gap-2" aria-label="Florin — go to overview">
-          <div class="vt-icon-badge vt-icon-badge-sm vt-icon-badge-square vt-bg-accents-brand">
-            <span class="vt-text-xs vt-font-bold vt-text-generic-white">F</span>
-          </div>
-          <span class="vt-text-sm vt-font-bold">Florin</span>
-        </a>
-      </div>
+    <!-- Sidebar: Sidebar Nav at the screen edge (fl-sidebar); an off-canvas drawer under md (florin.css). -->
+    <nav data-sidebar class="vt-side-nav fl-sidebar vt-w-64 vt-shrink-0" aria-label="Sidebar navigation">
+      <a href="/overview" class="vt-side-nav-header" aria-label="Florin — go to overview">
+        <span class="vt-side-nav-logo">F</span>
+        <span class="vt-side-nav-title">Florin</span>
+      </a>
 
-      <nav class="vt-flex-1 vt-p-3 vt-overflow-y-auto" aria-label="Sidebar navigation">
-        <p class="vt-section-label vt-px-3 vt-py-2">Banking</p>
-        <div class="vt-space-y-0.5">
+      <div class="vt-side-nav-body">
+        <div class="vt-side-nav-group">
+          <p class="vt-section-label">Banking</p>
           {banking.map((item) => (
-            <a href={item.href} class={`vt-nav-item${active === item.key ? ' vt-active' : ''}`} aria-current={active === item.key ? 'page' : undefined}>
-              <item.icon class="vt-w-4 vt-h-4" /> {item.label}
-              {item.badge && <span class="vt-count-badge vt-ml-auto">{item.badge}</span>}
+            <a href={item.href} class:list={['vt-nav-item', { 'vt-active': active === item.key }]} aria-current={active === item.key ? 'page' : undefined}>
+              <item.icon class="vt-nav-item-icon" /> {item.label}
+              {item.badge && <span class="vt-count-badge">{item.badge}</span>}
             </a>
           ))}
         </div>
 
-        <p class="vt-section-label vt-px-3 vt-py-2 vt-mt-4">Money</p>
-        <div class="vt-space-y-0.5">
+        <div class="vt-side-nav-group">
+          <p class="vt-section-label">Money</p>
           {money.map((item) => (
-            <a href={item.href} class={`vt-nav-item${active === item.key ? ' vt-active' : ''}`} aria-current={active === item.key ? 'page' : undefined}>
-              <item.icon class="vt-w-4 vt-h-4" /> {item.label}
+            <a href={item.href} class:list={['vt-nav-item', { 'vt-active': active === item.key }]} aria-current={active === item.key ? 'page' : undefined}>
+              <item.icon class="vt-nav-item-icon" /> {item.label}
             </a>
           ))}
         </div>
 
         <!-- Collapsible nested group: a parent nav item that expands a sub-list -->
-        <p class="vt-section-label vt-px-3 vt-py-2 vt-mt-4">Pages</p>
-        <div class="vt-space-y-0.5">
-          <button type="button" class="vt-nav-item vt-w-full" data-nav-group="pages" aria-expanded="true">
-            <Layers class="vt-w-4 vt-h-4" /> Auth &amp; errors
-            <ChevronDown class="vt-w-4 vt-h-4 vt-ml-auto vt-transition-transform" data-nav-caret />
-          </button>
-          <div data-nav-children="pages" class="vt-space-y-0.5 vt-mt-0.5 vt-ml-4 vt-pl-2 vt-border-l vt-border-border-default">
-            {pages.map((item) => (
-              <a href={item.href} class={`vt-nav-item${active === item.key ? ' vt-active' : ''}`}>
-                <item.icon class="vt-w-4 vt-h-4" /> {item.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </nav>
-
-      <div class="vt-p-3 vt-border-t vt-border-border-default">
-        <a href="/help" class={`vt-nav-item${active === 'help' ? ' vt-active' : ' vt-muted'}`}><HelpCircle class="vt-w-4 vt-h-4" /> Help center</a>
-        <!-- Single account entry point: identity + Profile/Settings/Billing/Log out -->
-        <div class="vt-relative">
-          <button class="vt-flex vt-items-center vt-gap-3 vt-w-full vt-text-left vt-px-3 vt-py-3 vt-rounded-xl vt-transition-colors vt-hover:bg-surfaces-subtle" data-dropdown-trigger="acct-menu" aria-label="Account menu">
-            <div class="vt-avatar vt-avatar-sm"><img src={FACES.SL} alt="Sofia Marchetti" /></div>
-            <div class="vt-min-w-0 vt-flex-1">
-              <p class="vt-text-sm vt-font-medium vt-truncate">Sofia Marchetti</p>
-              <p class="vt-text-xs vt-text-mains-quaternary vt-truncate">Owner · Nord Studio</p>
+        <div class="vt-side-nav-group">
+          <p class="vt-section-label">Pages</p>
+          <div class="vt-side-nav-section open" data-nav-section>
+            <button type="button" class="vt-nav-item" data-nav-group aria-expanded="true">
+              <Layers class="vt-nav-item-icon" /> Auth &amp; errors
+              <ChevronDown class="vt-nav-item-chevron" />
+            </button>
+            <div class="vt-side-nav-children">
+              {pages.map((item) => (
+                <a href={item.href} class:list={['vt-nav-item-sub', { 'vt-active': active === item.key }]} aria-current={active === item.key ? 'page' : undefined}>{item.label}</a>
+              ))}
             </div>
-            <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary vt-flex-shrink-0" />
-          </button>
-          <div id="acct-menu" data-menu class="vt-hidden vt-absolute vt-left-0 vt-right-0 vt-bottom-full vt-mb-2 vt-p-1 vt-rounded-xl vt-border vt-border-border-default vt-bg-surfaces-surface vt-shadow-lg vt-z-50">
-            <div class="vt-px-3 vt-py-2">
-              <p class="vt-text-sm vt-font-medium vt-truncate">Sofia Marchetti</p>
-              <p class="vt-text-xs vt-text-mains-quaternary vt-truncate">sofia@nordstudio.co</p>
-            </div>
-            <div class="vt-command-separator vt-mb-1"></div>
-            <a href="/settings" class={`vt-command-item${active === 'settings' ? ' vt-active' : ''}`}><Settings class="vt-w-4 vt-h-4" /> Settings</a>
-            <a href="/billing" class={`vt-command-item${active === 'billing' ? ' vt-active' : ''}`}><CreditCard class="vt-w-4 vt-h-4" /> Billing</a>
-            <div class="vt-command-separator vt-my-1"></div>
-            <a href="/login" class="vt-command-item vt-text-error-primary"><LogOut class="vt-w-4 vt-h-4" /> Log out</a>
           </div>
         </div>
       </div>
-    </aside>
+
+      <div class="vt-side-nav-footer">
+        <a href="/help" class:list={['vt-nav-item', active === 'help' ? 'vt-active' : 'vt-muted']} aria-current={active === 'help' ? 'page' : undefined}><HelpCircle class="vt-nav-item-icon" /> Help center</a>
+        <!-- Single account entry point: identity + Settings/Billing/Log out -->
+        <div class="vt-dropdown-wrap fl-block">
+          <button type="button" class="vt-nav-item fl-account" data-dropdown-trigger="acct-menu" aria-haspopup="menu" aria-expanded="false" aria-label="Account menu">
+            <span class="vt-avatar vt-avatar-sm"><img src={FACES.SL} alt="" /></span>
+            <span class="vt-flex vt-flex-col vt-min-w-0 vt-flex-1 vt-text-left">
+              <span class="vt-label-md vt-truncate">Sofia Marchetti</span>
+              <span class="vt-caption vt-text-foreground-muted vt-truncate">Owner · Nord Studio</span>
+            </span>
+            <ChevronDown class="vt-nav-item-chevron" />
+          </button>
+          <div id="acct-menu" class="vt-dropdown-menu fl-menu-up" role="menu">
+            <div class="vt-dropdown-label vt-flex-col vt-items-start">
+              <p class="vt-label-md vt-truncate">Sofia Marchetti</p>
+              <p class="vt-caption vt-text-foreground-muted vt-truncate">sofia@nordstudio.co</p>
+            </div>
+            <div class="vt-dropdown-separator" role="separator"></div>
+            <a href="/settings" role="menuitem" class:list={['vt-command-item', { 'vt-active': active === 'settings' }]}><Settings class="vt-command-item-icon" /> Settings</a>
+            <a href="/billing" role="menuitem" class:list={['vt-command-item', { 'vt-active': active === 'billing' }]}><CreditCard class="vt-command-item-icon" /> Billing</a>
+            <div class="vt-dropdown-separator" role="separator"></div>
+            <a href="/login" role="menuitem" class="vt-command-item vt-command-danger"><LogOut class="vt-command-item-icon" /> Log out</a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <!-- Main column -->
     <div class="vt-flex-1 vt-min-w-0 vt-flex vt-flex-col vt-min-h-0">
-      <header class="vt-h-14 vt-flex-shrink-0 vt-border-b vt-border-border-default vt-bg-surfaces-surface vt-flex vt-items-center vt-justify-between vt-gap-4 vt-px-6">
-        <div class="vt-flex vt-items-center vt-gap-2 vt-w-full vt-max-w-xs">
-          <button class="vt-notification-btn vt-lg:hidden vt-flex-shrink-0" data-sidebar-toggle aria-label="Open menu">
-            <Menu class="vt-w-5 vt-h-5 vt-text-mains-secondary" />
+      <header class="vt-header vt-shrink-0 vt-justify-between">
+        <div class="vt-flex vt-items-center vt-gap-2 vt-flex-1 vt-min-w-0">
+          <button type="button" class="vt-btn vt-btn-ghost vt-btn-icon vt-md:hidden" data-sidebar-toggle aria-label="Open menu">
+            <Menu class="vt-w-4 vt-h-4" />
           </button>
-          <div class="vt-relative vt-flex vt-w-full vt-items-center">
-            <Search class="vt-w-4 vt-h-4 vt-absolute vt-left-3 vt-text-mains-quaternary" />
-            <input class="vt-input vt-pl-10" type="search" placeholder="Search transactions…" aria-label="Search" />
+          <div class="vt-input-group fl-search">
+            <Search class="vt-input-icon" />
+            <input class="vt-input" type="search" placeholder="Search transactions…" aria-label="Search" />
           </div>
         </div>
-        <div class="vt-flex vt-items-center vt-gap-1">
-          <div class="vt-relative">
-            <button class="vt-btn vt-btn-ghost vt-btn-icon vt-relative" aria-label="Notifications" data-dropdown-trigger="notif-menu">
-              <Bell class="vt-w-4 vt-h-4" />
-              <span class="vt-absolute vt-top-2 vt-right-2 vt-w-2 vt-h-2 vt-rounded-full vt-bg-error-primary vt-ring-2 vt-ring-surfaces-surface"></span>
+        <div class="vt-header-actions">
+          <div class="vt-dropdown-wrap">
+            <button type="button" class="vt-btn vt-btn-ghost vt-btn-icon" aria-label="Notifications, 3 new" data-dropdown-trigger="notif-menu" aria-haspopup="menu" aria-expanded="false">
+              <span class="vt-notification-badge">
+                <Bell class="vt-w-4 vt-h-4" />
+                <span class="vt-notification-dot fl-dot-sm" aria-hidden="true"></span>
+              </span>
             </button>
-            <div id="notif-menu" data-menu class="vt-hidden vt-absolute vt-right-0 vt-top-full vt-mt-2 vt-w-80 vt-p-1 vt-rounded-xl vt-border vt-border-border-default vt-bg-surfaces-surface vt-shadow-lg vt-z-50">
-              <div class="vt-flex vt-items-center vt-justify-between vt-px-3 vt-py-2">
-                <span class="vt-text-sm vt-font-semibold">Notifications</span>
+            <div id="notif-menu" class="vt-dropdown-menu fl-menu-end vt-w-80" role="menu">
+              <div class="vt-dropdown-label vt-flex vt-items-center vt-justify-between">
+                <span class="vt-label-md">Notifications</span>
                 <span class="vt-badge vt-badge-soft vt-badge-info">3 new</span>
               </div>
-              <div class="vt-command-separator vt-mb-1"></div>
+              <div class="vt-dropdown-separator" role="separator"></div>
               {notifications.map((n) => (
-                <a href="#" class="vt-command-item">
-                  <div class={`vt-icon-badge vt-icon-badge-sm ${n.tone}`}><n.icon class="vt-w-4 vt-h-4" /></div>
-                  <div class="vt-min-w-0 vt-flex-1">
-                    <p class="vt-text-sm vt-font-medium vt-truncate">{n.title}</p>
-                    <p class="vt-text-xs vt-text-mains-quaternary vt-truncate">{n.desc}</p>
-                  </div>
-                  <span class="vt-text-xs vt-text-mains-quaternary vt-flex-shrink-0">{n.time}</span>
+                <a href="/notifications" role="menuitem" class="vt-command-item fl-menu-row">
+                  <span class:list={['vt-icon-badge vt-icon-badge-sm', n.tone]}><n.icon class="vt-icon-badge-icon" /></span>
+                  <span class="vt-flex vt-flex-col vt-min-w-0 vt-flex-1">
+                    <span class="vt-label-md vt-truncate">{n.title}</span>
+                    <span class="vt-caption vt-text-foreground-muted vt-truncate">{n.desc}</span>
+                  </span>
+                  <span class="vt-caption vt-text-foreground-muted vt-shrink-0">{n.time}</span>
                 </a>
               ))}
-              <div class="vt-command-separator vt-my-1"></div>
-              <a href="/notifications" class="vt-command-item vt-justify-center vt-text-sm vt-font-medium">View all notifications</a>
+              <div class="vt-dropdown-separator" role="separator"></div>
+              <a href="/notifications" role="menuitem" class="vt-command-item vt-justify-center">View all notifications</a>
             </div>
           </div>
         </div>
       </header>
 
-      <main class="vt-flex-1 vt-overflow-y-auto vt-p-6 vt-space-y-6">
+      <main class="vt-flex-1 vt-overflow-y-auto vt-p-6 vt-space-y-6 fl-main">
         <slot />
       </main>
     </div>
@@ -182,20 +180,26 @@ const pages = [
       // full viewport — nesting inside the scrollable shell offset it from the top.
       document.querySelectorAll('.vt-dialog-overlay').forEach(function (ov) { document.body.appendChild(ov); });
 
-      // `.vt-select-dropdown` shows via `.open` (its base is display:none);
-      // pop menus ([data-menu]) toggle via `vt-hidden`.
+      // Select dropdowns show via `.open`; Dropdown Menus via `.vt-open`.
       function closeMenus(except) {
         document.querySelectorAll('.vt-select-dropdown').forEach(function (m) {
           if (m !== except) m.classList.remove('open');
         });
-        document.querySelectorAll('[data-menu]').forEach(function (m) {
-          if (m !== except) m.classList.add('vt-hidden');
+        document.querySelectorAll('.vt-dropdown-menu').forEach(function (m) {
+          if (m !== except) {
+            m.classList.remove('vt-open');
+            var t = document.querySelector('[data-dropdown-trigger="' + m.id + '"]');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          }
         });
       }
       document.addEventListener('click', function () { closeMenus(null); });
 
+      // The Select component styles the chosen row via .selected; the markup marks it with aria-selected.
+      document.querySelectorAll('.vt-select-item[aria-selected="true"]').forEach(function (i) { i.classList.add('selected'); });
+
       // Functional selects: trigger toggles the dropdown; item click sets the label.
-      document.querySelectorAll('.vt-select-wrapper').forEach(function (wrap) {
+      document.querySelectorAll('[data-select]').forEach(function (wrap) {
         var trigger = wrap.querySelector('.vt-select-trigger');
         var dropdown = wrap.querySelector('.vt-select-dropdown');
         var label = wrap.querySelector('[data-select-label]');
@@ -209,8 +213,9 @@ const pages = [
         dropdown.querySelectorAll('.vt-select-item').forEach(function (item) {
           item.addEventListener('click', function () {
             if (label) label.textContent = item.textContent.trim();
-            dropdown.querySelectorAll('.vt-select-item').forEach(function (i) { i.removeAttribute('aria-selected'); });
+            dropdown.querySelectorAll('.vt-select-item').forEach(function (i) { i.removeAttribute('aria-selected'); i.classList.remove('selected'); });
             item.setAttribute('aria-selected', 'true');
+            item.classList.add('selected');
             dropdown.classList.remove('open');
           });
         });
@@ -222,9 +227,10 @@ const pages = [
         if (!menu) return;
         btn.addEventListener('click', function (e) {
           e.stopPropagation();
-          var open = menu.classList.contains('vt-hidden');
+          var open = !menu.classList.contains('vt-open');
           closeMenus(open ? menu : null);
-          menu.classList.toggle('vt-hidden', !open);
+          menu.classList.toggle('vt-open', open);
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
         });
         // Keep the menu open while interacting inside it (e.g. filter checkboxes);
         // links still navigate. Outside clicks still close it.
@@ -233,15 +239,11 @@ const pages = [
 
       // Collapsible sidebar groups: parent button expands/collapses its sub-list.
       document.querySelectorAll('[data-nav-group]').forEach(function (btn) {
-        var name = btn.getAttribute('data-nav-group');
-        var children = document.querySelector('[data-nav-children="' + name + '"]');
-        var caret = btn.querySelector('[data-nav-caret]');
-        if (!children) return;
+        var section = btn.closest('[data-nav-section]');
+        if (!section) return;
         btn.addEventListener('click', function () {
-          children.classList.toggle('vt-hidden');
-          var expanded = !children.classList.contains('vt-hidden');
+          var expanded = section.classList.toggle('open');
           btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-          if (caret) caret.style.transform = expanded ? '' : 'rotate(-90deg)';
         });
       });
 
@@ -251,8 +253,6 @@ const pages = [
           var on = sw.getAttribute('aria-checked') !== 'true';
           sw.setAttribute('aria-checked', on ? 'true' : 'false');
           sw.classList.toggle('vt-active', on);
-          sw.classList.toggle('vt-bg-accents-brand', on);
-          sw.classList.toggle('vt-bg-surfaces-moderate', !on);
         });
       });
 
@@ -262,7 +262,7 @@ const pages = [
           var card = btn.closest('.vt-card');
           if (!card) return;
           card.querySelectorAll('input, textarea').forEach(function (f) { f.value = ''; });
-          card.querySelectorAll('.vt-select-wrapper').forEach(function (w) {
+          card.querySelectorAll('[data-select]').forEach(function (w) {
             var first = w.querySelector('.vt-select-item');
             var label = w.querySelector('[data-select-label]');
             if (first && label) label.textContent = first.textContent.trim();
@@ -318,14 +318,15 @@ const pages = [
 
       // Sortable table columns: click a th[data-sort]; rows carry data-sort-<key>.
       document.querySelectorAll('th[data-sort]').forEach(function (th) {
-        th.style.cursor = 'pointer';
         th.addEventListener('click', function () {
           var key = th.getAttribute('data-sort');
           var table = th.closest('table');
           var tbody = table.querySelector('tbody');
           var asc = th.getAttribute('data-sort-dir') !== 'asc';
-          table.querySelectorAll('th[data-sort]').forEach(function (o) { if (o !== th) o.removeAttribute('data-sort-dir'); });
+          table.querySelectorAll('th[data-sort]').forEach(function (o) { if (o !== th) { o.removeAttribute('data-sort-dir'); o.setAttribute('aria-sort', 'none'); } });
           th.setAttribute('data-sort-dir', asc ? 'asc' : 'desc');
+          // Table highlights the sorted column by aria-sort.
+          th.setAttribute('aria-sort', asc ? 'ascending' : 'descending');
           var list = [].slice.call(tbody.querySelectorAll('[data-tx-row]'));
           list.sort(function (a, b) {
             var va = a.getAttribute('data-sort-' + key) || '';
@@ -372,7 +373,8 @@ const pages = [
 
       // Hover tooltip for chart bars (any element with [data-tip]).
       var tip = document.createElement('div');
-      tip.style.cssText = 'position:fixed;z-index:60;padding:4px 8px;border-radius:6px;background:hsl(var(--mains-primary));color:hsl(var(--surfaces-surface));font-size:12px;font-weight:500;line-height:1.3;pointer-events:none;box-shadow:0 4px 12px hsl(var(--generic-1000)/0.18);display:none;white-space:nowrap;';
+      tip.className = 'fl-tip';
+      tip.style.display = 'none';
       document.body.appendChild(tip);
       document.addEventListener('mouseover', function (e) {
         var el = e.target.closest && e.target.closest('[data-tip]');

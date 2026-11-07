@@ -9,48 +9,50 @@ const recipients = [
   { name: 'Aster Studio',   detail: 'ACH •••• 8830', face: 'TW' as const },
   { name: 'Lee Contractor', detail: 'Wire •••• 1192', face: 'JR' as const },
 ];
+
+// Select fields (shell contract: [data-select] wrapper, button trigger,
+// [data-select-label], .vt-select-item rows; the first item is the default).
+const accounts = ['Main · USD — $84,140.00', 'Savings — $31,500.00', 'Tax reserve — $12,900.00'];
+const payees = recipients.map((r) => `${r.name} — ${r.detail}`);
+const currencies = ['USD — US Dollar', 'EUR — Euro', 'GBP — British Pound'];
 ---
 
 <FlorinShell active="transfer" title="Florin — Transfer" description="Florin transfer — send money with a review step and recent recipients. Built with Veritheme.">
   <div>
-    <h1 class="vt-text-2xl vt-font-bold">Send money</h1>
-    <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">Transfer between accounts or pay someone new.</p>
+    <h1 class="vt-heading-md">Send money</h1>
+    <p class="vt-body-sm vt-text-foreground-muted vt-mt-1">Transfer between accounts or pay someone new.</p>
   </div>
 
   <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
     <!-- Form (overflow-visible so select dropdowns aren't clipped by the card) -->
     <div class="vt-lg:col-span-2 vt-card vt-overflow-visible">
       <div class="vt-card-header">
-        <h2 class="vt-text-sm vt-font-semibold">Transfer details</h2>
-        <p class="vt-text-xs vt-text-mains-quaternary vt-mt-0.5">Funds usually arrive within 1 business day.</p>
+        <h2 class="vt-label-md">Transfer details</h2>
+        <p class="vt-caption vt-text-foreground-muted vt-mt-0.5">Funds usually arrive within 1 business day.</p>
       </div>
-      <div class="vt-p-6 vt-space-y-4">
+      <div class="vt-card-body vt-space-y-4">
         <div>
-          <label class="vt-label vt-mb-1.5 vt-block">From account</label>
-          <div class="vt-select-wrapper vt-relative">
-            <div class="vt-select-trigger">
-              <span data-select-label>Main · USD — $84,140.00</span>
-              <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
-            </div>
-            <div class="vt-select-dropdown">
-              <div class="vt-select-item" aria-selected="true">Main · USD — $84,140.00</div>
-              <div class="vt-select-item">Savings — $31,500.00</div>
-              <div class="vt-select-item">Tax reserve — $12,900.00</div>
+          <label class="vt-label vt-mb-1.5 vt-block" for="from-account">From account</label>
+          <div class="vt-relative" data-select>
+            <button type="button" id="from-account" class="vt-select-trigger" aria-haspopup="listbox">
+              <span data-select-label>{accounts[0]}</span>
+              <ChevronDown class="vt-w-4 vt-h-4 vt-text-foreground-muted" />
+            </button>
+            <div class="vt-select-dropdown" role="listbox">
+              {accounts.map((a, i) => <div class="vt-select-item" role="option" aria-selected={i === 0 ? 'true' : undefined}>{a}</div>)}
             </div>
           </div>
         </div>
 
         <div>
-          <label class="vt-label vt-mb-1.5 vt-block">Recipient</label>
-          <div class="vt-select-wrapper vt-relative">
-            <div class="vt-select-trigger">
-              <span data-select-label data-recipient-target>Nord GmbH — DE89 •••• 4021</span>
-              <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
-            </div>
-            <div class="vt-select-dropdown">
-              <div class="vt-select-item" aria-selected="true">Nord GmbH — DE89 •••• 4021</div>
-              <div class="vt-select-item">Aster Studio — ACH •••• 8830</div>
-              <div class="vt-select-item">Lee Contractor — Wire •••• 1192</div>
+          <label class="vt-label vt-mb-1.5 vt-block" for="recipient">Recipient</label>
+          <div class="vt-relative" data-select>
+            <button type="button" id="recipient" class="vt-select-trigger" aria-haspopup="listbox">
+              <span data-select-label data-recipient-target>{payees[0]}</span>
+              <ChevronDown class="vt-w-4 vt-h-4 vt-text-foreground-muted" />
+            </button>
+            <div class="vt-select-dropdown" role="listbox">
+              {payees.map((p, i) => <div class="vt-select-item" role="option" aria-selected={i === 0 ? 'true' : undefined}>{p}</div>)}
             </div>
           </div>
         </div>
@@ -61,16 +63,14 @@ const recipients = [
             <input id="amount" class="vt-input" type="text" value="$5,000.00" inputmode="decimal" />
           </div>
           <div>
-            <label class="vt-label vt-mb-1.5 vt-block">Currency</label>
-            <div class="vt-select-wrapper vt-relative">
-              <div class="vt-select-trigger">
-                <span data-select-label>USD — US Dollar</span>
-                <ChevronDown class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
-              </div>
-              <div class="vt-select-dropdown">
-                <div class="vt-select-item" aria-selected="true">USD — US Dollar</div>
-                <div class="vt-select-item">EUR — Euro</div>
-                <div class="vt-select-item">GBP — British Pound</div>
+            <label class="vt-label vt-mb-1.5 vt-block" for="currency">Currency</label>
+            <div class="vt-relative" data-select>
+              <button type="button" id="currency" class="vt-select-trigger" aria-haspopup="listbox">
+                <span data-select-label>{currencies[0]}</span>
+                <ChevronDown class="vt-w-4 vt-h-4 vt-text-foreground-muted" />
+              </button>
+              <div class="vt-select-dropdown" role="listbox">
+                {currencies.map((c, i) => <div class="vt-select-item" role="option" aria-selected={i === 0 ? 'true' : undefined}>{c}</div>)}
               </div>
             </div>
           </div>
@@ -81,36 +81,41 @@ const recipients = [
           <textarea id="note" class="vt-textarea" rows="2" placeholder="What's this for?">Invoice #2048 — July retainer</textarea>
         </div>
       </div>
-      <div class="vt-card-footer vt-flex vt-items-center vt-justify-end vt-gap-2">
-        <button class="vt-btn vt-btn-ghost" data-form-clear>Clear</button>
-        <button class="vt-btn vt-btn-primary" data-modal-open="review-send-modal"><Send class="vt-w-4 vt-h-4" /> Review &amp; send</button>
+      <div class="vt-card-footer">
+        <button type="button" class="vt-btn vt-btn-ghost" data-form-clear>Clear</button>
+        <button type="button" class="vt-btn vt-btn-primary" data-modal-open="review-send-modal"><Send class="vt-w-4 vt-h-4" /> Review &amp; send</button>
       </div>
     </div>
 
     <!-- Summary + recipients -->
     <div class="vt-space-y-6">
-      <div class="vt-card vt-p-6">
-        <h2 class="vt-text-sm vt-font-semibold">Summary</h2>
-        <div class="vt-space-y-3 vt-mt-4 vt-text-sm">
-          <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-text-mains-quaternary">Amount</span><span class="vt-font-medium">$5,000.00</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-text-mains-quaternary">Fee</span><span class="vt-font-medium">$0.00</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-text-mains-quaternary">Arrives</span><span class="vt-font-medium">Jul 22</span></div>
-          <div class="vt-separator vt-my-1"></div>
-          <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-font-medium">Total</span><span class="vt-text-base vt-font-bold">$5,000.00</span></div>
+      <div class="vt-card">
+        <div class="vt-card-body">
+          <h2 class="vt-label-md">Summary</h2>
+          <div class="vt-space-y-3 vt-mt-4">
+            <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-text-foreground-muted">Amount</span><span class="vt-label-md">$5,000.00</span></div>
+            <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-text-foreground-muted">Fee</span><span class="vt-label-md">$0.00</span></div>
+            <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-text-foreground-muted">Arrives</span><span class="vt-label-md">Jul 22</span></div>
+            <div class="vt-separator vt-separator-h" role="separator"></div>
+            <div class="vt-flex vt-items-center vt-justify-between"><span class="vt-label-md">Total</span><span class="vt-label-lg">$5,000.00</span></div>
+          </div>
         </div>
       </div>
 
-      <div class="vt-card vt-p-6">
-        <h2 class="vt-text-sm vt-font-semibold">Recent recipients</h2>
-        <div class="vt-space-y-1 vt-mt-4">
+      <!-- Recent recipients: List Item rows; a click picks the recipient above -->
+      <div class="vt-card">
+        <div class="vt-card-header">
+          <h2 class="vt-label-md">Recent recipients</h2>
+        </div>
+        <div class="vt-flex vt-flex-col vt-py-2">
           {recipients.map((r) => (
-            <button class="vt-flex vt-items-center vt-gap-3 vt-w-full vt-text-left vt-rounded-xl vt-p-2 vt-transition-colors vt-hover:bg-surfaces-subtle" data-recipient={`${r.name} — ${r.detail}`}>
-              <div class="vt-avatar vt-avatar-sm"><img src={FACES[r.face]} alt={r.name} /></div>
-              <div class="vt-min-w-0 vt-flex-1">
-                <p class="vt-text-sm vt-font-medium vt-truncate">{r.name}</p>
-                <p class="vt-text-xs vt-text-mains-quaternary vt-truncate">{r.detail}</p>
+            <button type="button" class="vt-list-item vt-w-full vt-text-left" data-recipient={`${r.name} — ${r.detail}`}>
+              <div class="vt-avatar vt-avatar-sm"><img src={FACES[r.face]} alt="" /></div>
+              <div class="vt-list-item-content">
+                <span class="vt-list-item-title vt-truncate">{r.name}</span>
+                <span class="vt-list-item-description vt-truncate">{r.detail}</span>
               </div>
-              <ArrowRight class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
+              <ArrowRight class="vt-list-item-chevron" />
             </button>
           ))}
         </div>
@@ -121,20 +126,24 @@ const recipients = [
   <!-- Review & send confirmation -->
   <div id="review-send-modal" class="vt-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="review-send-title">
     <div class="vt-dialog">
-      <div class="vt-p-6">
-        <h3 id="review-send-title" class="vt-text-lg vt-font-semibold">Review transfer</h3>
-        <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1.5">Check the details before sending.</p>
-        <div class="vt-divide-y vt-divide-border-default vt-mt-5 vt-text-sm">
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-mains-quaternary">To</span><span class="vt-font-medium" data-recipient-target-echo>Nord GmbH</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-mains-quaternary">From</span><span class="vt-font-medium">Main · USD</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-mains-quaternary">Amount</span><span class="vt-font-medium">$5,000.00</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-mains-quaternary">Fee</span><span class="vt-font-medium">$0.00</span></div>
-          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-font-medium">Total</span><span class="vt-text-base vt-font-bold">$5,000.00</span></div>
+      <div class="vt-dialog-header">
+        <div class="vt-dialog-heading">
+          <h3 id="review-send-title" class="vt-dialog-title">Review transfer</h3>
+          <p class="vt-dialog-description">Check the details before sending.</p>
         </div>
       </div>
-      <div class="vt-flex vt-justify-end vt-gap-2 vt-p-6 vt-pt-0">
-        <button class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
-        <button class="vt-btn vt-btn-primary" data-modal-close><Send class="vt-w-4 vt-h-4" /> Send $5,000.00</button>
+      <div class="vt-dialog-body">
+        <div class="vt-divide-y vt-divide-border-default vt-body-sm">
+          <div class="vt-flex vt-items-center vt-justify-between vt-gap-4 vt-py-3"><span class="vt-text-foreground-muted">To</span><span class="vt-label-md vt-text-right" data-recipient-target-echo>Nord GmbH</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-foreground-muted">From</span><span class="vt-label-md">Main · USD</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-foreground-muted">Amount</span><span class="vt-label-md">$5,000.00</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-text-foreground-muted">Fee</span><span class="vt-label-md">$0.00</span></div>
+          <div class="vt-flex vt-items-center vt-justify-between vt-py-3"><span class="vt-label-md">Total</span><span class="vt-label-lg">$5,000.00</span></div>
+        </div>
+      </div>
+      <div class="vt-dialog-footer">
+        <button type="button" class="vt-btn vt-btn-ghost" data-modal-close>Cancel</button>
+        <button type="button" class="vt-btn vt-btn-primary" data-modal-close><Send class="vt-w-4 vt-h-4" /> Send $5,000.00</button>
       </div>
     </div>
   </div>
@@ -143,10 +152,23 @@ const recipients = [
     (function () {
       var target = document.querySelector('[data-recipient-target]');
       if (!target) return;
+      var select = target.closest('[data-select]');
+      var echo = document.querySelector('[data-recipient-target-echo]');
+      // A recent recipient sets the Recipient select (label + selected option).
       document.querySelectorAll('[data-recipient]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          target.textContent = btn.getAttribute('data-recipient');
+          var value = btn.getAttribute('data-recipient');
+          target.textContent = value;
+          if (select) select.querySelectorAll('.vt-select-item').forEach(function (item) {
+            if (item.textContent.trim() === value) item.setAttribute('aria-selected', 'true');
+            else item.removeAttribute('aria-selected');
+          });
         });
+      });
+      // The review dialog shows whoever is picked when it opens.
+      var review = document.querySelector('[data-modal-open="review-send-modal"]');
+      if (review && echo) review.addEventListener('click', function () {
+        echo.textContent = target.textContent.split(' — ')[0];
       });
     })();
   </script>

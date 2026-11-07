@@ -8,21 +8,16 @@ import { ArrowLeft, LifeBuoy } from '@lucide/astro';
 <FlorinLayout title="Florin — Page not found" description="404 — page not found. Florin, a fintech dashboard template built with Veritheme.">
   <div class="vt-min-h-screen vt-flex vt-flex-col">
     <header class="vt-p-6">
-      <a href="/overview" class="vt-inline-flex vt-items-center vt-gap-2">
-        <div class="vt-icon-badge vt-icon-badge-sm vt-icon-badge-square vt-bg-accents-brand">
-          <span class="vt-text-xs vt-font-bold vt-text-generic-white">F</span>
-        </div>
-        <span class="vt-text-base vt-font-bold">Florin</span>
+      <a href="/overview" class="vt-inline-flex vt-items-center vt-gap-2" aria-label="Florin — go to overview">
+        <span class="vt-icon-badge vt-icon-badge-sm vt-icon-badge-square fl-logo-mark vt-label-sm" aria-hidden="true">F</span>
+        <span class="vt-label-lg">Florin</span>
       </a>
     </header>
 
     <main class="vt-flex-1 vt-flex vt-flex-col vt-items-center vt-justify-center vt-text-center vt-px-6 vt-pb-24">
-      <p
-        class="vt-font-bold vt-leading-none"
-        style="font-size:clamp(5rem,18vw,10rem);background:linear-gradient(140deg, hsl(var(--accents-brand)), hsl(var(--accents-brand) / 0.45));-webkit-background-clip:text;background-clip:text;color:transparent"
-      >404</p>
-      <h1 class="vt-text-2xl vt-font-bold vt-mt-4">This page took an unexpected transfer.</h1>
-      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-2 vt-max-w-md">The page you're looking for doesn't exist or was moved. Let's get you back to your money.</p>
+      <p class="fl-404" aria-hidden="true">404</p>
+      <h1 class="vt-heading-md vt-mt-4">This page took an unexpected transfer.</h1>
+      <p class="vt-body-sm vt-text-foreground-muted vt-mt-2 vt-max-w-md">The page you're looking for doesn't exist or was moved. Let's get you back to your money.</p>
 
       <div class="vt-flex vt-flex-col vt-sm:flex-row vt-items-center vt-gap-3 vt-mt-8">
         <a href="/overview" class="vt-btn vt-btn-primary"><ArrowLeft class="vt-w-4 vt-h-4" /> Back to dashboard</a>
@@ -31,3 +26,18 @@ import { ArrowLeft, LifeBuoy } from '@lucide/astro';
     </main>
   </div>
 </FlorinLayout>
+
+<style>
+  /* The giant error code: larger than any text style (vt-display is 2rem in
+     1.2.1), fluid with the viewport, filled with the theme's brand gradient. */
+  .fl-404 {
+    margin: 0;
+    font-size: clamp(5rem, 18vw, 10rem);
+    font-weight: var(--vt-font-weight-bold);
+    line-height: 1;
+    background: linear-gradient(140deg, hsl(var(--vt-brand-fill)), hsl(var(--vt-brand-fill) / 0.45));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+</style>

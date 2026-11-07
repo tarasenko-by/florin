@@ -14,49 +14,60 @@ const goals = [
 <FlorinShell active="savings" title="Florin — Savings" description="Florin savings — goals, progress, and APY. Built with Veritheme.">
   <div class="vt-flex vt-items-center vt-justify-between vt-gap-4">
     <div>
-      <h1 class="vt-text-2xl vt-font-bold">Savings</h1>
-      <p class="vt-text-sm vt-text-mains-quaternary vt-mt-1">Set money aside and let it earn 3.10% APY.</p>
+      <h1 class="vt-heading-md">Savings</h1>
+      <p class="vt-body-sm vt-text-foreground-muted vt-mt-1">Set money aside and let it earn 3.10% APY.</p>
     </div>
-    <button class="vt-btn vt-btn-primary" data-modal-open="add-money-modal"><Plus class="vt-w-4 vt-h-4" /> New goal</button>
+    <button type="button" class="vt-btn vt-btn-primary" data-modal-open="add-money-modal"><Plus class="vt-w-4 vt-h-4" /> New goal</button>
   </div>
 
-  <!-- Stats -->
-  <div class="vt-grid vt-grid-cols-2 vt-lg:grid-cols-3 vt-gap-4">
-    <div class="vt-card vt-p-5">
-      <p class="vt-text-sm vt-text-mains-quaternary">Total saved</p>
-      <p class="vt-text-2xl vt-font-bold vt-mt-1">$40,400.00</p>
-      <span class="vt-text-xs vt-font-medium vt-text-success-primary">+$3,000 this month</span>
+  <!-- Stats (Stats Card; the third shows from lg up) -->
+  <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-2 vt-lg:grid-cols-3 vt-gap-4">
+    <div class="vt-card vt-stats-card">
+      <div class="vt-stats-card-content">
+        <p class="vt-stats-card-label">Total saved</p>
+        <p class="vt-stats-card-value">$40,400.00</p>
+      </div>
+      <div class="vt-stats-card-trend">
+        <span class="vt-stats-card-delta">+$3,000</span>
+        <span class="vt-stats-card-note">this month</span>
+      </div>
     </div>
-    <div class="vt-card vt-p-5">
-      <p class="vt-text-sm vt-text-mains-quaternary">Interest earned</p>
-      <p class="vt-text-2xl vt-font-bold vt-mt-1">$1,043.20</p>
-      <span class="vt-text-xs vt-font-medium vt-text-success-primary">3.10% APY</span>
+    <div class="vt-card vt-stats-card">
+      <div class="vt-stats-card-content">
+        <p class="vt-stats-card-label">Interest earned</p>
+        <p class="vt-stats-card-value">$1,043.20</p>
+      </div>
+      <div class="vt-stats-card-trend">
+        <span class="vt-stats-card-delta">3.10% APY</span>
+      </div>
     </div>
-    <div class="vt-card vt-p-5 vt-hidden vt-lg:block">
-      <p class="vt-text-sm vt-text-mains-quaternary">Goals on track</p>
-      <p class="vt-text-2xl vt-font-bold vt-mt-1">2 / 3</p>
-      <span class="vt-text-xs vt-text-mains-quaternary">1 needs attention</span>
+    <div class="vt-card vt-stats-card vt-hidden vt-lg:flex">
+      <div class="vt-stats-card-content">
+        <p class="vt-stats-card-label">Goals on track</p>
+        <p class="vt-stats-card-value">2 / 3</p>
+      </div>
+      <p class="vt-stats-card-note">1 needs attention</p>
     </div>
   </div>
 
   <!-- Goals -->
   <div class="vt-card">
     <div class="vt-card-header vt-flex vt-items-center vt-gap-2">
-      <TrendingUp class="vt-w-4 vt-h-4 vt-text-mains-quaternary" />
-      <h2 class="vt-text-sm vt-font-semibold">Goals</h2>
+      <TrendingUp class="vt-w-4 vt-h-4 vt-text-foreground-muted" />
+      <h2 class="vt-label-md">Goals</h2>
     </div>
-    <div class="vt-p-6 vt-space-y-6">
+    <div class="vt-card-body vt-space-y-6">
       {goals.map((g) => (
         <div>
           <div class="vt-flex vt-items-center vt-justify-between vt-gap-3">
             <div class="vt-flex vt-items-center vt-gap-3 vt-min-w-0">
-              <div class="vt-icon-badge"><g.icon class="vt-w-5 vt-h-5" /></div>
+              <div class="vt-icon-badge"><g.icon class="vt-icon-badge-icon" /></div>
               <div class="vt-min-w-0">
-                <p class="vt-text-sm vt-font-medium vt-truncate">{g.name}</p>
-                <p class="vt-text-xs vt-text-mains-quaternary">{g.saved} of {g.target}</p>
+                <p class="vt-label-md vt-truncate">{g.name}</p>
+                <p class="vt-caption vt-text-foreground-muted">{g.saved} of {g.target}</p>
               </div>
             </div>
-            <span class="vt-text-sm vt-font-semibold vt-flex-shrink-0">{g.pct}</span>
+            <span class="vt-label-md vt-flex-shrink-0">{g.pct}</span>
           </div>
           <div class="vt-progress vt-progress-sm vt-mt-3"><div class={`vt-progress-bar ${g.w}`}></div></div>
         </div>
