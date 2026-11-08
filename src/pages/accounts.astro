@@ -54,21 +54,23 @@ const currencies = ['USD — US Dollar', 'EUR — Euro', 'GBP — British Pound'
   </div>
 
   <!-- Detail: card visual + IBAN/actions, and recent activity -->
-  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+  <div class="fl-split">
     <!-- Physical/virtual card -->
     <div class="vt-card">
       <div class="vt-card-body">
         <h2 class="vt-label-md">Your card</h2>
-        <FlorinCard data-account-card class="vt-mt-4 vt-transition-opacity" brand name="Business" kind="Physical" last="4921" exp="08/28" holder="Sofia Marchetti" net="VISA" />
-        <div class="vt-grid vt-grid-cols-2 vt-gap-2 vt-mt-4">
-          <button type="button" class="vt-btn vt-btn-bordered vt-btn-sm" data-freeze-toggle aria-pressed="false"><Snowflake class="vt-w-4 vt-h-4" /> Freeze</button>
-          <a href={url('/cards')} class="vt-btn vt-btn-bordered vt-btn-sm"><Settings class="vt-w-4 vt-h-4" /> Manage</a>
+        <div class="fl-card-stack vt-mt-4">
+          <FlorinCard data-account-card class="vt-transition-opacity" brand name="Business" kind="Physical" last="4921" exp="08/28" holder="Sofia Marchetti" net="VISA" />
+          <div class="vt-grid vt-grid-cols-2 vt-gap-2 vt-mt-4">
+            <button type="button" class="vt-btn vt-btn-bordered vt-btn-sm" data-freeze-toggle aria-pressed="false"><Snowflake class="vt-w-4 vt-h-4" /> Freeze</button>
+            <a href={url('/cards')} class="vt-btn vt-btn-bordered vt-btn-sm"><Settings class="vt-w-4 vt-h-4" /> Manage</a>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Account detail + activity -->
-    <div class="vt-lg:col-span-2 vt-card">
+    <div class="fl-span-2 vt-card">
       <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
         <div>
           <h2 class="vt-label-md">Main · USD</h2>

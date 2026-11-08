@@ -132,6 +132,7 @@ main :target {
 /* The "F" brand mark outside the sidebar (auth, 404): a solid brand tile,
    the same as the sidebar's Sidebar Nav logo. */
 .vt-icon-badge.fl-logo-mark {
+  border-radius: var(--vt-radius-sm);
   background: hsl(var(--vt-brand-fill));
   color: hsl(var(--vt-on-brand));
 }
@@ -143,4 +144,45 @@ input.vt-radio,
 input[type="checkbox"],
 input[type="radio"] {
   accent-color: hsl(var(--vt-brand-fill));
+}
+
+/* ── Layout ───────────────────────────────────────────────────────────── */
+/* Two-thirds + one-third rows. The library's lg: step is the WINDOW at
+   1024px, but the 256px sidebar leaves the content only ~720px there — too
+   narrow for a table beside a panel. So the split starts at 1280px (≈976px
+   of content); below that the panels stack. */
+.fl-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--vt-spacing-6);
+}
+@media (min-width: 1280px) {
+  .fl-split { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .fl-split > .fl-span-2 { grid-column: span 2 / span 2; }
+}
+/* Four KPI tiles in a row need the same room: two per row until 1280px. */
+@media (min-width: 1280px) {
+  .fl-kpi-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* The bank card and its action row keep a real card's size (352px wide at
+   most) and sit centred in whatever column holds them. */
+.fl-card-stack {
+  width: 100%;
+  max-width: 22rem;
+  margin-inline: auto;
+}
+
+/* A chart that fills the height its card is given by the row (the panel
+   beside it may be taller), never shorter than 160px. */
+.fl-chart-fill {
+  flex: 1 1 auto;
+  min-height: var(--vt-spacing-40);
+}
+
+/* Month labels under a 12-month chart: on phones every other one, so the
+   names do not run into each other (the slots stay, so labels keep their
+   place under the bars). */
+@media (max-width: 639.98px) {
+  .fl-every-other > :nth-child(even) { visibility: hidden; }
 }

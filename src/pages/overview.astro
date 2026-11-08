@@ -18,13 +18,18 @@ const kpis = [
   { label: 'Savings rate',   value: '42%',         trend: '+6 pts', good: true, sub: 'of net income' },
 ];
 
+// Bar height is the value's share of the axis (60k), so the chart scales
+// with whatever height its card is given.
+const CF_AXIS = 60000;
+const cfPct = (v: number) => `${((v / CF_AXIS) * 100).toFixed(1)}%`;
+const usd = (v: number) => `$${v.toLocaleString('en-US')}`;
 const cashflow = [
-  { m: 'Feb', inc: 'vt-h-16', exp: 'vt-h-10', incV: '$28,400', expV: '$17,200' },
-  { m: 'Mar', inc: 'vt-h-20', exp: 'vt-h-12', incV: '$34,900', expV: '$20,600' },
-  { m: 'Apr', inc: 'vt-h-14', exp: 'vt-h-16', incV: '$25,100', expV: '$28,300' },
-  { m: 'May', inc: 'vt-h-24', exp: 'vt-h-12', incV: '$41,800', expV: '$21,900' },
-  { m: 'Jun', inc: 'vt-h-28', exp: 'vt-h-16', incV: '$47,600', expV: '$27,400' },
-  { m: 'Jul', inc: 'vt-h-32', exp: 'vt-h-14', incV: '$52,300', expV: '$18,940' },
+  { m: 'Feb', inc: 28400, exp: 17200 },
+  { m: 'Mar', inc: 34900, exp: 20600 },
+  { m: 'Apr', inc: 25100, exp: 28300 },
+  { m: 'May', inc: 41800, exp: 21900 },
+  { m: 'Jun', inc: 47600, exp: 27400 },
+  { m: 'Jul', inc: 52300, exp: 18940 },
 ];
 
 const categories = [
@@ -62,7 +67,7 @@ const tx = [
   </div>
 
   <!-- KPI tiles (Stats Card; the trend colour follows `good`, not the sign) -->
-  <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-2 vt-lg:grid-cols-4 vt-gap-4">
+  <div class="vt-grid vt-grid-cols-1 vt-sm:grid-cols-2 fl-kpi-4 vt-gap-4">
     {kpis.map((k) => (
       <div class:list={['vt-card vt-stats-card', { 'vt-stats-card-down': !k.good }]}>
         <div class="vt-stats-card-content">
@@ -78,9 +83,9 @@ const tx = [
   </div>
 
   <!-- Cash flow + card visual -->
-  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
-    <div class="vt-lg:col-span-2 vt-card">
-      <div class="vt-card-body">
+  <div class="fl-split">
+    <div class="fl-span-2 vt-card vt-flex vt-flex-col">
+      <div class="vt-card-body vt-flex-1 vt-flex vt-flex-col">
         <div class="vt-flex vt-items-start vt-justify-between vt-gap-4">
           <div>
             <h2 class="vt-label-md">Cash flow</h2>
@@ -91,11 +96,11 @@ const tx = [
             <span class="vt-flex vt-items-center vt-gap-1.5 vt-caption vt-text-foreground-secondary"><span class="vt-w-2 vt-h-2 vt-rounded-sm vt-bg-surface-strong"></span> Spending</span>
           </div>
         </div>
-        <div class="vt-flex vt-items-end vt-justify-between vt-gap-4 vt-h-40 vt-mt-6">
+        <div class="vt-flex vt-items-end vt-gap-4 vt-mt-6 fl-chart-fill">
           {cashflow.map((c) => (
-            <div class="vt-flex-1 vt-flex vt-items-end vt-justify-center vt-gap-1.5">
-              <div class={`vt-w-3 vt-rounded-t vt-bg-brand-fill ${c.inc}`} data-tip={`${c.m} · Income ${c.incV}`}></div>
-              <div class={`vt-w-3 vt-rounded-t vt-bg-surface-strong ${c.exp}`} data-tip={`${c.m} · Spending ${c.expV}`}></div>
+            <div class="vt-flex-1 vt-flex vt-items-end vt-justify-center vt-gap-1.5 vt-h-full">
+              <div class="fl-cf-bar vt-rounded-t vt-bg-brand-fill" style={`--h: ${cfPct(c.inc)}`} data-tip={`${c.m} · Income ${usd(c.inc)}`}></div>
+              <div class="fl-cf-bar vt-rounded-t vt-bg-surface-strong" style={`--h: ${cfPct(c.exp)}`} data-tip={`${c.m} · Spending ${usd(c.exp)}`}></div>
             </div>
           ))}
         </div>
@@ -107,20 +112,22 @@ const tx = [
       </div>
     </div>
 
-    <div class="vt-card">
-      <div class="vt-card-body">
-        <FlorinCard brand name="Business" kind="Physical" last="4921" exp="08/28" net="VISA" balanceLabel="Main · USD balance" balance="$84,140.00" />
-        <div class="vt-grid vt-grid-cols-2 vt-gap-2 vt-mt-4">
+    <div class="vt-card vt-flex vt-flex-col">
+      <div class="vt-card-body vt-flex-1 vt-flex vt-flex-col vt-justify-center">
+        <div class="fl-card-stack">
+          <FlorinCard brand name="Business" kind="Physical" last="4921" exp="08/28" net="VISA" balanceLabel="Main · USD balance" balance="$84,140.00" />
+          <div class="vt-grid vt-grid-cols-2 vt-gap-2 vt-mt-4">
           <button type="button" class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="add-money-modal"><Plus class="vt-w-4 vt-h-4" /> Add money</button>
           <button type="button" class="vt-btn vt-btn-bordered vt-btn-sm" data-modal-open="move-modal"><ArrowLeftRight class="vt-w-4 vt-h-4" /> Move</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Recent transactions + spending by category -->
-  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
-    <div class="vt-lg:col-span-2 vt-card">
+  <div class="fl-split">
+    <div class="fl-span-2 vt-card">
       <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
         <div>
           <h2 class="vt-label-md">Recent transactions</h2>
@@ -194,3 +201,13 @@ const tx = [
 
   <FlorinModals />
 </FlorinShell>
+
+<style>
+  /* The library has no chart: a bar's height is data, read from --h (share of the axis). */
+  .fl-cf-bar {
+    flex: 1;
+    max-width: var(--vt-spacing-7);
+    height: var(--h, 0%);
+    cursor: pointer;
+  }
+</style>

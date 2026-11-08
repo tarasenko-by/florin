@@ -44,9 +44,9 @@ const pct = (c: typeof cards[number]) => Math.round((c.spent / c.limit) * 100);
     <button type="button" class="vt-btn vt-btn-primary" data-modal-open="new-card-modal"><Plus class="vt-w-4 vt-h-4" /> New card</button>
   </div>
 
-  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6 vt-items-start">
+  <div class="fl-split vt-items-start">
     <!-- Selected card: visual + spend + controls -->
-    <div class="vt-lg:col-span-2 vt-card">
+    <div class="fl-span-2 vt-card">
       <div class="vt-card-body vt-space-y-6">
         <div class="vt-flex vt-flex-col vt-sm:flex-row vt-gap-6">
           <!-- Realistic card visual (re-skins with the theme) -->

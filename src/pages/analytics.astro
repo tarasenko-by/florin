@@ -138,10 +138,10 @@ const donut = mix.map((s) => {
   </div>
 
   <!-- Cash balance (area) + Spending mix (donut) -->
-  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+  <div class="fl-split">
     <!-- Area chart -->
-    <div class="vt-lg:col-span-2 vt-card">
-      <div class="vt-card-body">
+    <div class="fl-span-2 vt-card vt-flex vt-flex-col">
+      <div class="vt-card-body vt-flex-1 vt-flex vt-flex-col">
         <div class="vt-flex vt-items-start vt-justify-between vt-gap-4">
           <div>
             <h2 class="vt-label-md">Cash balance</h2>
@@ -149,8 +149,8 @@ const donut = mix.map((s) => {
           </div>
           <span class="vt-badge vt-badge-soft vt-badge-success">+62% YoY</span>
         </div>
-        <div class="vt-relative vt-mt-5" data-area-chart>
-          <svg viewBox={`0 0 ${AW} ${AH}`} class="vt-w-full vt-h-48 vt-block fl-area" preserveAspectRatio="none" aria-hidden="true">
+        <div class="vt-relative vt-mt-5 fl-chart-fill fl-area-box" data-area-chart>
+          <svg viewBox={`0 0 ${AW} ${AH}`} class="vt-absolute vt-inset-0 vt-w-full vt-h-full vt-block fl-area" preserveAspectRatio="none" aria-hidden="true">
             <defs>
               <linearGradient id="balArea" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" class="fl-area-stop" stop-opacity="0.16" />
@@ -178,7 +178,7 @@ const donut = mix.map((s) => {
             ))}
           </div>
         </div>
-        <div class="vt-flex vt-mt-2">
+        <div class="vt-flex vt-mt-2 fl-every-other">
           {balMonths.map((m) => (
             <span class="vt-flex-1 vt-text-center vt-caption vt-text-foreground-muted">{m}</span>
           ))}
@@ -231,7 +231,7 @@ const donut = mix.map((s) => {
   <!-- Income vs spending (bars) -->
   <div class="vt-card">
     <div class="vt-card-body">
-      <div class="vt-flex vt-items-start vt-justify-between vt-gap-4">
+      <div class="vt-flex vt-flex-wrap vt-items-start vt-justify-between vt-gap-4">
         <div>
           <h2 class="vt-label-md">Income vs spending</h2>
           <p class="vt-caption vt-text-foreground-muted vt-mt-0.5">$33,360 avg. net flow</p>
@@ -254,7 +254,7 @@ const donut = mix.map((s) => {
           </div>
         ))}
       </div>
-      <div data-chart-labels class="fl-bar-row vt-flex vt-mt-2">
+      <div data-chart-labels class="fl-bar-row fl-every-other vt-flex vt-mt-2">
         {DATA['12m'].map((r) => (
           <span class="vt-flex-1 vt-min-w-0 vt-text-center vt-caption vt-text-foreground-muted">{r[0]}</span>
         ))}
@@ -263,7 +263,7 @@ const donut = mix.map((s) => {
   </div>
 
   <!-- Channels + top merchants -->
-  <div class="vt-grid vt-grid-cols-1 vt-lg:grid-cols-3 vt-gap-6">
+  <div class="fl-split">
     <div class="vt-card">
       <div class="vt-card-body">
         <div>
@@ -287,7 +287,7 @@ const donut = mix.map((s) => {
       </div>
     </div>
 
-    <div class="vt-lg:col-span-2 vt-card">
+    <div class="fl-span-2 vt-card">
       <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
         <h2 class="vt-label-md">Top merchants</h2>
         <a href={url('/transactions')} class="vt-link">View all</a>
@@ -391,6 +391,8 @@ const donut = mix.map((s) => {
   /* Area chart colours come from tokens (SVG attributes cannot read utilities). */
   .fl-area-stop { stop-color: hsl(var(--vt-success-fill)); }
   .fl-area-grid { stroke: hsl(var(--vt-border-default)); }
+  /* The area chart grows with its card, from the 192px it always had. */
+  .fl-chart-fill.fl-area-box { min-height: var(--vt-spacing-48); }
   .fl-area-line { stroke: hsl(var(--vt-success-fill)); }
   /* Area dots sit on the data points: position is data, read from --x / --y. */
   .fl-area-dot {
@@ -405,6 +407,10 @@ const donut = mix.map((s) => {
   .fl-donut-track { stroke: hsl(var(--vt-surface-subtle)); }
   .fl-donut-seg { stroke: hsl(var(--vt-brand-fill) / var(--op)); cursor: pointer; }
   .fl-swatch { background: hsl(var(--vt-brand-fill) / var(--op)); }
+  /* On a dark card the faint steps sank into the background: there the steps
+     run from the brand toward the (light) text colour instead, by lightness. */
+  .dark .fl-donut-seg { stroke: color-mix(in oklab, hsl(var(--vt-brand-fill)) calc(var(--op) * 100%), hsl(var(--vt-foreground-primary))); }
+  .dark .fl-swatch { background: color-mix(in oklab, hsl(var(--vt-brand-fill)) calc(var(--op) * 100%), hsl(var(--vt-foreground-primary))); }
   /* Progress has no value class: the bar's width is the channel's share (--w). */
   .fl-share { width: var(--w); }
   @media (prefers-reduced-motion: reduce) {
