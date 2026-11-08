@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Florin — hero screen "Overview". Built from Veritheme components via the MCP.
 import FlorinShell from '../components/FlorinShell.astro';
 import FlorinModals from '../components/FlorinModals.astro';
@@ -125,7 +126,7 @@ const tx = [
           <h2 class="vt-label-md">Recent transactions</h2>
           <p class="vt-caption vt-text-foreground-muted vt-mt-0.5">Across all accounts</p>
         </div>
-        <a href="/transactions" class="vt-link">View all</a>
+        <a href={url('/transactions')} class="vt-link">View all</a>
       </div>
       <!-- Table component; the card is its frame, so no second vt-table-wrap border inside it -->
       <div class="vt-overflow-x-auto">

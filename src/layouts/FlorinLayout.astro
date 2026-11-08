@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Standalone Florin layout: page chrome + live re-theming toolbar.
 // All styling comes from the published veritheme package (CSS-only design
 // system) plus florin.css for what the library does not ship. Florin's colour
@@ -38,7 +39,7 @@ const { title, description } = Astro.props;
   <meta property="og:site_name" content="Florin" />
   <meta name="author" content="Siarhei Tarasenka" />
   <meta name="generator" content={Astro.generator} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')}>
   <script is:inline>
     // Runs before paint: set the theme preset + dark mode with no flash.
     // Dark follows an explicit stored choice, otherwise the OS preference.

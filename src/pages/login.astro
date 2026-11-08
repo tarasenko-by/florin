@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Florin — Sign in. Auth split (FlorinAuth): social + email, links to sign up / reset.
 import FlorinAuth from '../components/FlorinAuth.astro';
 import { Check } from '@lucide/astro';
@@ -44,12 +45,12 @@ import { Check } from '@lucide/astro';
         </div>
         Remember me for 30 days
       </label>
-      <a href="/forgot-password" class="vt-link">Forgot password?</a>
+      <a href={url('/forgot-password')} class="vt-link">Forgot password?</a>
     </div>
     <div class="vt-form-actions vt-form-actions-block">
-      <a href="/overview" class="vt-btn vt-btn-primary"><span>Sign in</span></a>
+      <a href={url('/overview')} class="vt-btn vt-btn-primary"><span>Sign in</span></a>
     </div>
   </form>
 
-  <p class="vt-auth-footer">No account? <a href="/signup" class="vt-link">Create one</a></p>
+  <p class="vt-auth-footer">No account? <a href={url('/signup')} class="vt-link">Create one</a></p>
 </FlorinAuth>

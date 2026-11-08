@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Shared Florin app shell: sidebar + top bar, wrapped in FlorinLayout (which
 // provides the page chrome + live re-theming toolbar). Each screen supplies its
 // own <main> content via the default slot and marks the active nav item.
@@ -26,23 +27,23 @@ const notifications = [
 ];
 
 const banking = [
-  { key: 'overview',     label: 'Overview',     href: '/overview',     icon: LayoutDashboard },
-  { key: 'transactions', label: 'Transactions', href: '/transactions', icon: Receipt, badge: '12' },
-  { key: 'accounts',     label: 'Accounts',     href: '/accounts',     icon: Wallet },
-  { key: 'cards',        label: 'Cards',        href: '/cards',        icon: CreditCard },
-  { key: 'analytics',    label: 'Analytics',    href: '/analytics',    icon: ChartColumn },
+  { key: 'overview',     label: 'Overview',     href: url('/overview'),     icon: LayoutDashboard },
+  { key: 'transactions', label: 'Transactions', href: url('/transactions'), icon: Receipt, badge: '12' },
+  { key: 'accounts',     label: 'Accounts',     href: url('/accounts'),     icon: Wallet },
+  { key: 'cards',        label: 'Cards',        href: url('/cards'),        icon: CreditCard },
+  { key: 'analytics',    label: 'Analytics',    href: url('/analytics'),    icon: ChartColumn },
 ];
 const money = [
-  { key: 'transfer', label: 'Transfer', href: '/transfer', icon: ArrowLeftRight },
-  { key: 'payments', label: 'Payments', href: '/payments', icon: Send },
-  { key: 'savings',  label: 'Savings',  href: '/savings',  icon: PiggyBank },
+  { key: 'transfer', label: 'Transfer', href: url('/transfer'), icon: ArrowLeftRight },
+  { key: 'payments', label: 'Payments', href: url('/payments'), icon: Send },
+  { key: 'savings',  label: 'Savings',  href: url('/savings'),  icon: PiggyBank },
 ];
 // Collapsible nested group — demonstrates the sidebar supports sub-lists.
 const pages = [
-  { key: 'login',    label: 'Login',          href: '/login',           icon: LogIn },
-  { key: 'signup',   label: 'Sign up',        href: '/signup',          icon: UserPlus },
-  { key: 'forgot',   label: 'Reset password', href: '/forgot-password', icon: KeyRound },
-  { key: 'notfound', label: '404 page',       href: '/404',             icon: TriangleAlert },
+  { key: 'login',    label: 'Login',          href: url('/login'),           icon: LogIn },
+  { key: 'signup',   label: 'Sign up',        href: url('/signup'),          icon: UserPlus },
+  { key: 'forgot',   label: 'Reset password', href: url('/forgot-password'), icon: KeyRound },
+  { key: 'notfound', label: '404 page',       href: url('/404'),             icon: TriangleAlert },
 ];
 ---
 
@@ -54,7 +55,7 @@ const pages = [
 
     <!-- Sidebar: Sidebar Nav at the screen edge (fl-sidebar); an off-canvas drawer under md (florin.css). -->
     <nav data-sidebar class="vt-side-nav fl-sidebar vt-w-64 vt-shrink-0" aria-label="Sidebar navigation">
-      <a href="/overview" class="vt-side-nav-header" aria-label="Florin — go to overview">
+      <a href={url('/overview')} class="vt-side-nav-header" aria-label="Florin — go to overview">
         <span class="vt-side-nav-logo">F</span>
         <span class="vt-side-nav-title">Florin</span>
       </a>
@@ -97,7 +98,7 @@ const pages = [
       </div>
 
       <div class="vt-side-nav-footer">
-        <a href="/help" class:list={['vt-nav-item', active === 'help' ? 'vt-active' : 'vt-muted']} aria-current={active === 'help' ? 'page' : undefined}><HelpCircle class="vt-nav-item-icon" /> Help center</a>
+        <a href={url('/help')} class:list={['vt-nav-item', active === 'help' ? 'vt-active' : 'vt-muted']} aria-current={active === 'help' ? 'page' : undefined}><HelpCircle class="vt-nav-item-icon" /> Help center</a>
         <!-- Single account entry point: identity + Settings/Billing/Log out -->
         <div class="vt-dropdown-wrap fl-block">
           <button type="button" class="vt-nav-item fl-account" data-dropdown-trigger="acct-menu" aria-haspopup="menu" aria-expanded="false" aria-label="Account menu">
@@ -114,10 +115,10 @@ const pages = [
               <p class="vt-caption vt-text-foreground-muted vt-truncate">sofia@nordstudio.co</p>
             </div>
             <div class="vt-dropdown-separator" role="separator"></div>
-            <a href="/settings" role="menuitem" class:list={['vt-command-item', { 'vt-active': active === 'settings' }]}><Settings class="vt-command-item-icon" /> Settings</a>
-            <a href="/billing" role="menuitem" class:list={['vt-command-item', { 'vt-active': active === 'billing' }]}><CreditCard class="vt-command-item-icon" /> Billing</a>
+            <a href={url('/settings')} role="menuitem" class:list={['vt-command-item', { 'vt-active': active === 'settings' }]}><Settings class="vt-command-item-icon" /> Settings</a>
+            <a href={url('/billing')} role="menuitem" class:list={['vt-command-item', { 'vt-active': active === 'billing' }]}><CreditCard class="vt-command-item-icon" /> Billing</a>
             <div class="vt-dropdown-separator" role="separator"></div>
-            <a href="/login" role="menuitem" class="vt-command-item vt-command-danger"><LogOut class="vt-command-item-icon" /> Log out</a>
+            <a href={url('/login')} role="menuitem" class="vt-command-item vt-command-danger"><LogOut class="vt-command-item-icon" /> Log out</a>
           </div>
         </div>
       </div>
@@ -150,7 +151,7 @@ const pages = [
               </div>
               <div class="vt-dropdown-separator" role="separator"></div>
               {notifications.map((n) => (
-                <a href="/notifications" role="menuitem" class="vt-command-item fl-menu-row">
+                <a href={url('/notifications')} role="menuitem" class="vt-command-item fl-menu-row">
                   <span class:list={['vt-icon-badge vt-icon-badge-sm', n.tone]}><n.icon class="vt-icon-badge-icon" /></span>
                   <span class="vt-flex vt-flex-col vt-min-w-0 vt-flex-1">
                     <span class="vt-label-md vt-truncate">{n.title}</span>
@@ -160,7 +161,7 @@ const pages = [
                 </a>
               ))}
               <div class="vt-dropdown-separator" role="separator"></div>
-              <a href="/notifications" role="menuitem" class="vt-command-item vt-justify-center">View all notifications</a>
+              <a href={url('/notifications')} role="menuitem" class="vt-command-item vt-justify-center">View all notifications</a>
             </div>
           </div>
         </div>
@@ -402,7 +403,7 @@ const pages = [
       var sbToggle = document.querySelector('[data-sidebar-toggle]');
       if (sbToggle) sbToggle.addEventListener('click', function () { setSidebar(!sidebar.classList.contains('is-open')); });
       if (sbBackdrop) sbBackdrop.addEventListener('click', function () { setSidebar(false); });
-      if (sidebar) sidebar.querySelectorAll('a[href^="/florin"]').forEach(function (a) {
+      if (sidebar) sidebar.querySelectorAll('a[href]').forEach(function (a) {
         a.addEventListener('click', function () { setSidebar(false); });
       });
     })();

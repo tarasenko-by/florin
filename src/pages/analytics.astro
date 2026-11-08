@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Florin — Analytics. KPI row, cashflow chart, spend channels, top merchants.
 import FlorinShell from '../components/FlorinShell.astro';
 import { Download, Building2, CreditCard, Landmark, Receipt, Send } from '@lucide/astro';
@@ -289,7 +290,7 @@ const donut = mix.map((s) => {
     <div class="vt-lg:col-span-2 vt-card">
       <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
         <h2 class="vt-label-md">Top merchants</h2>
-        <a href="/transactions" class="vt-link">View all</a>
+        <a href={url('/transactions')} class="vt-link">View all</a>
       </div>
       <div class="vt-overflow-x-auto">
         <table class="vt-table">

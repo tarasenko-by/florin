@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Florin — Cards. Selectable card wallet: pick a card on the right, see it
 // large with its spend + controls on the left. Realistic card visuals that
 // re-skin with the theme.
@@ -130,7 +131,7 @@ const pct = (c: typeof cards[number]) => Math.round((c.spent / c.limit) * 100);
   <div class="vt-card">
     <div class="vt-card-header vt-flex vt-items-center vt-justify-between vt-gap-4">
       <h2 class="vt-label-md">Recent card activity</h2>
-      <a href="/transactions" class="vt-link">View all</a>
+      <a href={url('/transactions')} class="vt-link">View all</a>
     </div>
     <div class="vt-divide-y vt-divide-border-default">
       {activity.map((t) => (

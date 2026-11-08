@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Shared shell-less layout for Florin auth screens, built on Veritheme's Auth
 // split (vt-auth-split): the form on the left, a brand-coloured panel on the
 // right that RE-SKINS with the active theme (the campaign's whole hook).
@@ -33,7 +34,7 @@ const perks = [
       <main class="vt-auth-split-main">
         <div class="vt-auth">
           <div class="vt-auth-header">
-            <a href="/overview" class="vt-flex vt-items-center vt-gap-2" aria-label="Florin — go to overview">
+            <a href={url('/overview')} class="vt-flex vt-items-center vt-gap-2" aria-label="Florin — go to overview">
               <span class="vt-icon-badge vt-icon-badge-square fl-logo-mark vt-label-md" aria-hidden="true">F</span>
               <span class="vt-label-lg">Florin</span>
             </a>

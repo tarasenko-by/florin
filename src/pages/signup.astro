@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 // Florin — Sign up. Auth split (FlorinAuth): social + email, links back to sign in.
 import FlorinAuth from '../components/FlorinAuth.astro';
 import { Check } from '@lucide/astro';
@@ -48,9 +49,9 @@ import { Check } from '@lucide/astro';
       <span>I agree to the <a href="#" class="vt-link">Terms</a> and <a href="#" class="vt-link">Privacy Policy</a></span>
     </label>
     <div class="vt-form-actions vt-form-actions-block">
-      <a href="/overview" class="vt-btn vt-btn-primary"><span>Create account</span></a>
+      <a href={url('/overview')} class="vt-btn vt-btn-primary"><span>Create account</span></a>
     </div>
   </form>
 
-  <p class="vt-auth-footer">Already have an account? <a href="/login" class="vt-link">Sign in</a></p>
+  <p class="vt-auth-footer">Already have an account? <a href={url('/login')} class="vt-link">Sign in</a></p>
 </FlorinAuth>
